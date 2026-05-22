@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ShoppingBag, Menu, X, Search } from "lucide-react";
 import { useCartStore } from "@/lib/store";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 const LOGO_BLACK = "https://qxkevpcrzpywtalzctsz.supabase.co/storage/v1/object/public/seenways-images/logo-black-hq.png";
 const LOGO_WHITE = "https://qxkevpcrzpywtalzctsz.supabase.co/storage/v1/object/public/seenways-images/logo-white-transparent.png";
@@ -48,7 +48,7 @@ export default function Navbar() {
     }
   };
 
-  const isTransparent = !scrolled && !mobileOpen;
+  const pathname = usePathname(); const isTransparent = pathname === "/" && !scrolled && !mobileOpen;
 
   return (
     <>
