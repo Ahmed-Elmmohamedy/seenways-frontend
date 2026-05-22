@@ -107,7 +107,7 @@ export default function AdminCouponsPage() {
               </div>
               <div>
                 <label className="block text-[10px] tracking-widest uppercase mb-2 text-gray-500">Type *</label>
-                <select value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value as "PERCENTAGE" | "FIXED" })}
+                <select value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value as any })}
                   className="w-full border border-gray-200 px-4 py-3 text-sm focus:outline-none focus:border-black transition-colors">
                   <option value="PERCENTAGE">Percentage (%)</option>
                   <option value="FIXED">Fixed Amount (ج.م)</option>
