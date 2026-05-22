@@ -91,18 +91,24 @@ export default function Navbar() {
       </nav>
 
       {searchOpen && (
-        <div className="fixed inset-0 z-50 bg-white flex flex-col">
-          <div className="container flex items-center justify-between h-20">
-            <span className="text-xs tracking-widest uppercase">Search</span>
-            <button onClick={() => setSearchOpen(false)}><X size={22} /></button>
-          </div>
-          <div className="container flex-1 flex flex-col justify-center pb-32">
-            <form onSubmit={handleSearch}>
-              <input autoFocus value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="SEARCH FOR PRODUCTS..."
-                className="w-full text-4xl md:text-6xl font-display tracking-widest border-0 border-b-2 border-black outline-none py-4 bg-transparent placeholder:text-gray-300" />
+        <div className="fixed inset-0 z-40 bg-transparent" onClick={() => setSearchOpen(false)} />
+      )}
+      {searchOpen && (
+        <div className="absolute top-full left-0 right-0 bg-white border-b border-gray-100 shadow-sm z-50 py-3">
+          <div className="container">
+            <form onSubmit={handleSearch} className="flex items-center gap-3">
+              <Search size={16} className="text-gray-400 flex-shrink-0" />
+              <input
+                autoFocus
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search products..."
+                className="flex-1 text-sm focus:outline-none bg-transparent py-1"
+              />
+              <button type="button" onClick={() => setSearchOpen(false)} className="text-gray-400 hover:text-black">
+                <X size={16} />
+              </button>
             </form>
-            <p className="text-xs text-gray-400 tracking-widest mt-6 uppercase">Press Enter to search</p>
           </div>
         </div>
       )}
