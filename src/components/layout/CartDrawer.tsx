@@ -14,7 +14,7 @@ export default function CartDrawer() {
       {isOpen && <div className="fixed inset-0 bg-black/40 z-50 transition-opacity" onClick={closeCart} />}
 
       {/* Drawer */}
-      <div className={`fixed top-0 right-0 h-full w-full max-w-md bg-white z-50 flex flex-col shadow-2xl transition-transform duration-500 ease-in-out ${isOpen ? "translate-x-0" : "translate-x-full"}`}>
+      <div className={`fixed top-0 right-0 h-full w-full max-w-md bg-white z-50 flex flex-col shadow-2xl transition-transform duration-500 ease-in-out ${isOpen ? "translate-x-0 visible" : "translate-x-full invisible"}`}>
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100">
           <div className="flex items-center gap-3">
