@@ -7,6 +7,10 @@ export const metadata: Metadata = {
   title: { default: "SEENWAYS | Modern Menswear", template: "%s | SEENWAYS" },
   description: "Premium menswear collection. Minimal pieces, maximum presence.",
   keywords: ["menswear", "fashion", "SEENWAYS", "ملابس رجالي", "موضة"],
+  icons: {
+    icon: "https://qxkevpcrzpywtalzctsz.supabase.co/storage/v1/object/public/seenways-images/icon-black.png",
+    apple: "https://qxkevpcrzpywtalzctsz.supabase.co/storage/v1/object/public/seenways-images/icon-black.png",
+  },
   openGraph: {
     title: "SEENWAYS | Modern Menswear",
     description: "Premium menswear collection.",
@@ -14,6 +18,7 @@ export const metadata: Metadata = {
     siteName: "SEENWAYS",
     locale: "ar_EG",
     type: "website",
+    images: ["https://qxkevpcrzpywtalzctsz.supabase.co/storage/v1/object/public/seenways-images/logo-black-hq.png"],
   },
 };
 
