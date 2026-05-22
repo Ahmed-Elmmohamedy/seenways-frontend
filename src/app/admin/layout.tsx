@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { LayoutDashboard, Package, ShoppingCart, Tag, LogOut, Menu, X, Settings, ChevronRight, Ticket } from "lucide-react";
+import { LayoutDashboard, Package, ShoppingCart, Tag, LogOut, Menu, X, Settings, ChevronRight, Ticket, ShieldAlert, MapPin } from "lucide-react";
 import { useAuthStore } from "@/lib/store";
 
 const LOGO_WHITE = "https://qxkevpcrzpywtalzctsz.supabase.co/storage/v1/object/public/seenways-images/logo-white-transparent.png";
@@ -14,7 +14,9 @@ const navItems = [
   { href: "/admin/orders", icon: ShoppingCart, label: "Orders" },
   { href: "/admin/categories", icon: Tag, label: "Categories" },
   { href: "/admin/coupons", icon: Ticket, label: "Coupons" },
-  { href: "/admin/settings", icon: Settings, label: "Settings" },
+  { href: "/admin/blacklist", icon: ShieldAlert, label: "Blacklist" },
+{ href: "/admin/governorates", icon: MapPin, label: "Shipping" },
+{ href: "/admin/settings", icon: Settings, label: "Settings" },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
