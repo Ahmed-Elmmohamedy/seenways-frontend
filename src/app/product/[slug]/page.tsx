@@ -54,6 +54,7 @@ export default function ProductPage() {
     addItem({
       id: `${product.id}-${selectedColor?.name}-${selectedSize?.size}`,
       productId: product.id,
+      slug: product.slug,
       name: product.name,
       price: product.price,
       image: currentImages[0],
