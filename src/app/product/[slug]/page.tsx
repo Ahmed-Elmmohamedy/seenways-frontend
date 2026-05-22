@@ -22,7 +22,7 @@ export default function ProductPage() {
   const { slug } = useParams<{ slug: string }>();
   const router = useRouter();
   const { addItem } = useCartStore();
-  const { items: wishlist, addItem: addWishlist, removeItem: removeWishlist } = useWishlistStore();
+  const { toggle: toggleWishlistItem, has: isInWishlistFn } = useWishlistStore();
 
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
@@ -46,7 +46,7 @@ export default function ProductPage() {
 
   const currentImages = selectedColor?.images?.length ? selectedColor.images : product?.images || [];
   const availableSizes = selectedColor?.sizes?.filter(s => s.stock > 0) || [];
-  const isInWishlist = wishlist.some(w => w.productId === product?.id);
+  const isInWishlist = product ? isInWishlistFn(product.id) : false;
 
   const handleAddToCart = () => {
     if (!product) return;
@@ -67,8 +67,7 @@ export default function ProductPage() {
 
   const toggleWishlist = () => {
     if (!product) return;
-    if (isInWishlist) removeWishlist(product.id);
-    else addWishlist({ id: product.id, productId: product.id, name: product.name, price: product.price, image: currentImages[0] });
+    toggleWishlistItem(product.id);({ id: product.id, productId: product.id, name: product.name, price: product.price, image: currentImages[0] });
   };
 
   if (loading) return (
