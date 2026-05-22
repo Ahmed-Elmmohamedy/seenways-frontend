@@ -91,26 +91,26 @@ export default function Navbar() {
       </nav>
 
       {searchOpen && (
-        <div className="fixed inset-0 z-40 bg-transparent" onClick={() => setSearchOpen(false)} />
-      )}
-      {searchOpen && (
-        <div className="absolute top-full left-0 right-0 bg-white border-b border-gray-100 shadow-sm z-50 py-3">
-          <div className="container">
-            <form onSubmit={handleSearch} className="flex items-center gap-3">
-              <Search size={16} className="text-gray-400 flex-shrink-0" />
-              <input
-                autoFocus
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search products..."
-                className="flex-1 text-sm focus:outline-none bg-transparent py-1"
-              />
-              <button type="button" onClick={() => setSearchOpen(false)} className="text-gray-400 hover:text-black">
-                <X size={16} />
-              </button>
-            </form>
+        <>
+          <div className="fixed inset-0 z-40" onClick={() => setSearchOpen(false)} />
+          <div className="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 shadow-sm z-50 h-14 md:h-20 flex items-center">
+            <div className="container">
+              <form onSubmit={handleSearch} className="flex items-center gap-3">
+                <Search size={16} className="text-gray-400 flex-shrink-0" />
+                <input
+                  autoFocus
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search products..."
+                  className="flex-1 text-sm focus:outline-none bg-transparent py-1"
+                />
+                <button type="button" onClick={() => setSearchOpen(false)} className="text-gray-400 hover:text-black transition-colors">
+                  <X size={16} />
+                </button>
+              </form>
+            </div>
           </div>
-        </div>
+        </>
       )}
 
       {mobileOpen && (
