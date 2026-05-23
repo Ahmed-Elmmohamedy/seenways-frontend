@@ -40,13 +40,13 @@ export default function HomePage() {
         <section className="relative h-screen overflow-hidden">
           <Image src="https://images.unsplash.com/photo-1536766820879-059fec98ec0a?w=1600&q=80" alt="SEENWAYS" fill className="object-cover object-center" priority />
           <div className="absolute inset-0 bg-black/35" />
-          <div className="relative z-10 h-full flex items-end pb-24">
+          <div className="relative z-10 h-full flex items-end pb-16 md:pb-24">
             <div className="container">
-              <p className="text-xs tracking-[0.5em] uppercase text-white/60 mb-4">NEW COLLECTION 2026</p>
-              <h1 className="text-4xl sm:text-5xl md:text-7xl font-display text-white leading-tight mb-3 max-w-sm">
+              <p className="text-[10px] tracking-[0.4em] uppercase text-white/60 mb-3">NEW COLLECTION 2026</p>
+              <h1 className="text-3xl sm:text-5xl md:text-7xl font-display text-white leading-tight mb-2">
                 SEENWAYS
               </h1>
-              <p className="text-sm md:text-base tracking-[0.3em] uppercase text-white/70 mb-8">
+              <p className="text-xs md:text-base tracking-[0.3em] uppercase text-white/70 mb-6">
                 MODERN MENSWEAR
               </p>
               <div className="flex flex-wrap items-center gap-4">
