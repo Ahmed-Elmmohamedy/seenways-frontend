@@ -126,7 +126,7 @@ export default function HomePage() {
                 <h2 className="text-5xl md:text-7xl font-display leading-tight mb-8">
                   DESIGNED<br />FOR EVERYDAY<br />CONFIDENCE.
                 </h2>
-                <p className="text-white/40 text-sm leading-relaxed tracking-wider mb-12 max-w-sm">
+                <p className="text-white/40 text-sm leading-relaxed tracking-wider mb-12 max-w-sm" dir="ltr">
                   At SEENWAYS, we believe in creating timeless pieces that speak through quality, fit, and simplicity. Every piece is crafted for the modern Egyptian man.
                 </p>
                 <Link href="/about" className="inline-flex items-center gap-3 border border-white/30 px-10 py-4 text-xs tracking-widest uppercase hover:bg-white hover:text-black transition-all duration-500">
