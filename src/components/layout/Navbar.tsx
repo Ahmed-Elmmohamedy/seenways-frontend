@@ -106,24 +106,27 @@ export default function Navbar() {
         </div>
       </nav>
       
-      {/* Mobile Search Bar */}
+     {/* Mobile Search Dropdown */}
       {searchOpen && (
-        <div className="md:hidden fixed top-14 left-0 right-0 bg-white border-b border-gray-100 z-50 px-4 py-3">
-          <form onSubmit={handleSearch} className="flex items-center gap-3">
-            <Search size={15} className="text-gray-400 flex-shrink-0" />
-            <input
-              autoFocus
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search products..."
-              className="flex-1 text-sm focus:outline-none bg-transparent"
-            />
-            <button type="button" onClick={() => { setSearchOpen(false); setSearchQuery(""); }}
-              className="text-gray-400 hover:text-black transition-colors">
-              <X size={16} />
-            </button>
-          </form>
-        </div>
+        <>
+          <div className="fixed inset-0 z-40" onClick={() => { setSearchOpen(false); setSearchQuery(""); }} />
+          <div className="md:hidden fixed top-14 right-4 z-50 bg-white border border-gray-200 shadow-lg rounded-sm w-64">
+            <form onSubmit={handleSearch} className="flex items-center gap-2 px-3 py-2.5">
+              <Search size={14} className="text-gray-400 flex-shrink-0" />
+              <input
+                autoFocus
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search..."
+                className="flex-1 text-sm focus:outline-none bg-transparent"
+              />
+              <button type="button" onClick={() => { setSearchOpen(false); setSearchQuery(""); }}
+                className="text-gray-400 hover:text-black transition-colors">
+                <X size={14} />
+              </button>
+            </form>
+          </div>
+        </>
       )}
 
       {searchOpen && (
