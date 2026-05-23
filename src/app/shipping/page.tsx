@@ -150,8 +150,12 @@ export default function ShippingPage() {
               Have questions about your order, shipping, or returns? We're here to help.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <a href="https://www.instagram.com/seen__ways" target="_blank" rel="noopener noreferrer"
+              <a href="mailto:seenwayseg@gmail.com"
                 className="inline-flex items-center gap-3 bg-black text-white px-8 py-4 text-xs tracking-widest uppercase hover:bg-gray-900 transition-colors">
+                EMAIL US
+              </a>
+              <a href="https://www.instagram.com/seen__ways" target="_blank" rel="noopener noreferrer"
+                className="inline-flex items-center gap-3 border border-black px-8 py-4 text-xs tracking-widest uppercase hover:bg-black hover:text-white transition-colors">
                 INSTAGRAM @SEEN__WAYS
               </a>
               <a href="/contact"
