@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -7,8 +7,9 @@ import { Check, ArrowRight, ShieldCheck, Tag, X } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { useCartStore } from "@/lib/store";
-import { createOrder, validateCoupon } from "@/lib/api";
+import { createOrder, validateCoupon, getGovernorates } from "@/lib/api";
 import { formatPrice, validatePhone, isRateLimited } from "@/lib/utils";
+import { initiateCheckout, purchase as fbPurchase } from "@/lib/fbpixel";
 import Image from "next/image";
 
 interface FormData {
@@ -17,6 +18,10 @@ interface FormData {
 
 interface CouponState {
   code: string; discount: number; type: string; value: number; applied: boolean;
+}
+
+interface Governorate {
+  id: string; name: string; shippingFee: number;
 }
 
 export default function CheckoutPage() {
@@ -28,11 +33,24 @@ export default function CheckoutPage() {
   const [couponInput, setCouponInput] = useState("");
   const [couponLoading, setCouponLoading] = useState(false);
   const [coupon, setCoupon] = useState<CouponState | null>(null);
+  const [governorates, setGovernorates] = useState<Governorate[]>([]);
+  const [selectedGov, setSelectedGov] = useState<Governorate | null>(null);
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
 
   const subtotal = total();
   const discountAmount = coupon?.discount || 0;
-  const finalTotal = subtotal - discountAmount;
+  const shippingFee = selectedGov?.shippingFee || 0;
+  const finalTotal = subtotal - discountAmount + shippingFee;
+
+  useEffect(() => {
+    getGovernorates().then(r => setGovernorates(r.data)).catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    if (items.length > 0) {
+      initiateCheckout({ total: finalTotal, numItems: items.length });
+    }
+  }, []);
 
   const handleApplyCoupon = async () => {
     if (!couponInput.trim()) return;
@@ -63,6 +81,12 @@ export default function CheckoutPage() {
         items: items.map((i) => ({ productId: i.productId, quantity: i.quantity, size: i.size || null, color: i.color || null })),
       });
       setOrderNumber(res.data.orderNumber);
+      // Track Purchase
+      fbPurchase({
+        orderNumber: res.data.orderNumber,
+        total: finalTotal,
+        items: items.map(i => ({ id: i.productId, name: i.name, price: i.price, quantity: i.quantity })),
+      });
       clearCart();
       setDone(true);
     } catch (err: any) {
@@ -123,8 +147,20 @@ export default function CheckoutPage() {
                   <input {...register("email")} type="email" className="w-full border border-gray-200 px-4 py-3.5 text-sm focus:outline-none focus:border-black transition-colors" />
                 </div>
                 <div>
-                  <label className="block text-[10px] tracking-widest uppercase mb-2 text-gray-500">City *</label>
-                  <input {...register("city", { required: "City is required" })} className="w-full border border-gray-200 px-4 py-3.5 text-sm focus:outline-none focus:border-black transition-colors" />
+                  <label className="block text-[10px] tracking-widest uppercase mb-2 text-gray-500">المحافظة *</label>
+                  <select {...register("city", { required: "اختر المحافظة" })}
+                    onChange={(e) => {
+                      const gov = governorates.find(g => g.name === e.target.value);
+                      setSelectedGov(gov || null);
+                    }}
+                    className="w-full border border-gray-200 px-4 py-3.5 text-sm focus:outline-none focus:border-black transition-colors">
+                    <option value="">اختر المحافظة</option>
+                    {governorates.map(g => (
+                      <option key={g.id} value={g.name}>
+                        {g.name} {g.shippingFee === 0 ? "(شحن مجاني)" : `(${g.shippingFee} ج.م)`}
+                      </option>
+                    ))}
+                  </select>
                   {errors.city && <p className="text-red-500 text-xs mt-1">{errors.city.message}</p>}
                 </div>
                 <div className="md:col-span-2">
@@ -194,7 +230,12 @@ export default function CheckoutPage() {
               <div className="border-t border-gray-100 pt-4 space-y-2">
                 <div className="flex justify-between text-xs text-gray-500"><span>Subtotal</span><span>{formatPrice(subtotal)}</span></div>
                 {discountAmount > 0 && <div className="flex justify-between text-xs text-green-600"><span>Discount</span><span>-{formatPrice(discountAmount)}</span></div>}
-                <div className="flex justify-between text-xs text-gray-500"><span>Shipping</span><span className="text-green-600">FREE</span></div>
+                <div className="flex justify-between text-xs text-gray-500">
+                  <span>Shipping</span>
+                  <span className={shippingFee === 0 ? "text-green-600" : ""}>
+                    {shippingFee === 0 ? "FREE" : `${shippingFee} EGP`}
+                  </span>
+                </div>
                 <div className="border-t border-gray-100 pt-3 flex justify-between">
                   <span className="text-sm font-medium tracking-widest uppercase">Total</span>
                   <span className="text-xl font-display tracking-widest">{formatPrice(finalTotal)}</span>
