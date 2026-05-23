@@ -7,6 +7,7 @@ import Footer from "@/components/layout/Footer";
 import { getProduct } from "@/lib/api";
 import { useCartStore, useWishlistStore } from "@/lib/store";
 import { formatPrice } from "@/lib/utils";
+import { viewContent, addToCart as fbAddToCart } from "@/lib/fbpixel";
 
 interface SizeVariant { id: string; size: string; stock: number; }
 interface ColorVariant { id: string; name: string; images: string[]; sizes: SizeVariant[]; }
@@ -38,6 +39,13 @@ export default function ProductPage() {
         setSelectedColor(res.data.colorVariants[0]);
       }
       setLoading(false);
+      // Track ViewContent
+      viewContent({
+        id: res.data.id,
+        name: res.data.name,
+        price: res.data.price,
+        category: res.data.category?.name,
+      });
     }).catch(() => { setLoading(false); router.push("/shop"); });
   }, [slug]);
 
@@ -60,6 +68,13 @@ export default function ProductPage() {
       image: currentImages[0],
       size: selectedSize?.size,
       color: selectedColor?.name,
+      quantity: 1,
+    });
+    // Track AddToCart
+    fbAddToCart({
+      id: product.id,
+      name: product.name,
+      price: product.price,
       quantity: 1,
     });
     setAdded(true);
