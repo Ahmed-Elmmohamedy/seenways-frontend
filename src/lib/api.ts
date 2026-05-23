@@ -60,6 +60,13 @@ export const getStats = () => api.get("/admin/stats");
 
 // Upload
 export const uploadImage = (file: File) => {
-  const fd = new FormData(); fd.append("image", file);
+  const fd = new FormData();
+  fd.append("image", file);
   return api.post("/upload/image", fd, { headers: { "Content-Type": "multipart/form-data" } });
 };
+
+// Governorates
+export const getGovernorates = () => api.get("/governorates");
+export const getAdminGovernorates = () => api.get("/governorates/admin/all");
+export const updateGovernorate = (id: string, data: object) => api.put(`/governorates/${id}`, data);
+export const deleteGovernorate = (id: string) => api.delete(`/governorates/${id}`);
