@@ -42,16 +42,16 @@ export default function HomePage() {
           <div className="absolute inset-0 bg-black/35" />
           <div className="relative z-10 h-full flex items-end pb-24">
             <div className="container">
-              <p className="text-xs tracking-[0.5em] uppercase text-white/60 mb-6">NEW COLLECTION 2025</p>
-              <h1 className="text-7xl md:text-9xl font-display text-white leading-none mb-8">
-                SEENWAYS<br />MODERN<br />MENSWEAR
+              <p className="text-xs tracking-[0.5em] uppercase text-white/60 mb-4">NEW COLLECTION 2026</p>
+              <h1 className="text-4xl sm:text-5xl md:text-7xl font-display text-white leading-tight mb-3 max-w-sm">
+                SEENWAYS
               </h1>
-              <div className="flex items-center gap-6">
-                <Link href="/shop" className="inline-flex items-center gap-3 bg-white text-black px-10 py-4 text-xs tracking-widest uppercase hover:bg-gray-100 transition-colors">
+              <p className="text-sm md:text-base tracking-[0.3em] uppercase text-white/70 mb-8">
+                MODERN MENSWEAR
+              </p>
+              <div className="flex flex-wrap items-center gap-4">
+                <Link href="/shop" className="inline-flex items-center gap-3 bg-white text-black px-8 py-4 text-xs tracking-widest uppercase hover:bg-gray-100 transition-colors">
                   SHOP NOW <ArrowRight size={14} />
-                </Link>
-                <Link href="/about" className="text-white/70 text-xs tracking-widest uppercase hover:text-white transition-colors border-b border-white/30 pb-0.5">
-                  OUR STORY
                 </Link>
               </div>
             </div>
