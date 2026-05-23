@@ -11,7 +11,7 @@ export default function AboutPage() {
   return (
     <>
       <Navbar />
-      <main className="pt-20">
+      <main className="pt-20" dir="ltr">
         {/* Hero */}
         <section className="relative h-[70vh] overflow-hidden">
           <Image src="https://images.unsplash.com/photo-1490578474895-699cd4e2cf59?w=1600&q=80" alt="SEENWAYS Story" fill className="object-cover" />
@@ -32,7 +32,7 @@ export default function AboutPage() {
               <h2 className="text-4xl md:text-5xl font-display mb-10 leading-tight">
                 BUILT FOR THE MODERN EGYPTIAN MAN
               </h2>
-              <div className="space-y-6 text-gray-500 text-sm leading-relaxed tracking-wide" dir="ltr">
+              <div className="space-y-6 text-gray-500 text-sm leading-relaxed tracking-wide">
                 <p>
                   SEENWAYS was born from a simple belief: that every man deserves to dress with intention. In a world flooded with fast fashion and generic designs, we saw a gap — premium menswear that speaks to the modern Egyptian identity.
                 </p>
@@ -57,7 +57,7 @@ export default function AboutPage() {
                 { title: "SIMPLICITY", desc: "Minimal design, maximum impact. We believe in the power of restraint." },
                 { title: "CONFIDENCE", desc: "Our clothes are designed to make you feel powerful, not just look good." },
               ].map((v) => (
-                <div key={v.title} className="border-t border-white/10 pt-8" dir="ltr">
+                <div key={v.title} className="border-t border-white/10 pt-8">
                   <h3 className="text-3xl font-display mb-4">{v.title}</h3>
                   <p className="text-white/40 text-sm leading-relaxed tracking-wide">{v.desc}</p>
                 </div>
