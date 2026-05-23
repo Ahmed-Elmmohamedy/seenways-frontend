@@ -40,7 +40,7 @@ export default function HomePage() {
         <section className="relative h-screen overflow-hidden">
           <Image src="https://images.unsplash.com/photo-1536766820879-059fec98ec0a?w=1600&q=80" alt="SEENWAYS" fill className="object-cover object-center" priority />
           <div className="absolute inset-0 bg-black/35" />
-          <div className="relative z-10 h-full flex items-center md:items-end md:pb-24">
+          <div className="relative z-10 h-full flex items-end pb-16 md:pb-32">
             <div className="container">
               <p className="text-[10px] tracking-[0.4em] uppercase text-white/60 mb-3">NEW COLLECTION 2026</p>
               <h1 className="text-3xl sm:text-5xl md:text-7xl font-display text-white leading-tight mb-2">
