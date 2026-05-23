@@ -74,9 +74,25 @@ export default function Navbar() {
               <Image src={isTransparent ? ICON_WHITE : ICON_BLACK} alt="SEENWAYS" width={32} height={32} className="h-8 w-8 object-contain" />
             </Link>
             <div className="flex items-center gap-3">
-              <button onClick={() => setSearchOpen(true)} className={`p-2 transition-colors ${isTransparent ? "text-white" : "text-black"}`}>
-                <Search size={20} />
-              </button>
+              {searchOpen ? (
+                <form onSubmit={handleSearch} className="flex items-center gap-2 animate-in slide-in-from-right">
+                  <input
+                    autoFocus
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search..."
+                    className={`w-36 md:w-48 text-xs border-b py-1 focus:outline-none bg-transparent transition-colors ${isTransparent ? "border-white/50 text-white placeholder-white/50" : "border-gray-300 text-black placeholder-gray-400"}`}
+                  />
+                  <button type="button" onClick={() => { setSearchOpen(false); setSearchQuery(""); }}
+                    className={`p-1 transition-colors ${isTransparent ? "text-white/70" : "text-gray-400"} hover:text-black`}>
+                    <X size={16} />
+                  </button>
+                </form>
+              ) : (
+                <button onClick={() => setSearchOpen(true)} className={`p-2 transition-colors ${isTransparent ? "text-white" : "text-black"}`}>
+                  <Search size={20} />
+                </button>
+              )}
               <button onClick={openCart} className={`relative p-2 transition-colors ${isTransparent ? "text-white" : "text-black"}`}>
                 <ShoppingBag size={20} />
                 {cartCount > 0 && (
@@ -91,26 +107,7 @@ export default function Navbar() {
       </nav>
 
       {searchOpen && (
-        <>
-          <div className="fixed inset-0 z-40" onClick={() => setSearchOpen(false)} />
-          <div className="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 shadow-sm z-50 h-14 md:h-20 flex items-center">
-            <div className="container">
-              <form onSubmit={handleSearch} className="flex items-center gap-3">
-                <Search size={16} className="text-gray-400 flex-shrink-0" />
-                <input
-                  autoFocus
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search products..."
-                  className="flex-1 text-sm focus:outline-none bg-transparent py-1"
-                />
-                <button type="button" onClick={() => setSearchOpen(false)} className="text-gray-400 hover:text-black transition-colors">
-                  <X size={16} />
-                </button>
-              </form>
-            </div>
-          </div>
-        </>
+        <div className="fixed inset-0 z-40" onClick={() => setSearchOpen(false)} />
       )}
 
       {mobileOpen && (
