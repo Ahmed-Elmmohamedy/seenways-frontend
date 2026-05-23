@@ -30,9 +30,14 @@ export default function Footer() {
               <p className="text-white/40 text-xs leading-relaxed tracking-wider max-w-xs">
                 Premium menswear for the modern man. Minimal pieces, maximum presence.
               </p>
-              <div className="flex items-center gap-4 mt-8">
-                <a href="https://www.instagram.com/seen__ways" target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-white transition-colors text-xs tracking-widest uppercase">
+              <div className="flex items-center gap-6 mt-8">
+                <a href="https://www.instagram.com/seen__ways" target="_blank" rel="noopener noreferrer"
+                  className="text-white/40 hover:text-white transition-colors text-xs tracking-widest uppercase">
                   Instagram
+                </a>
+                <a href="https://www.facebook.com/profile.php?id=100090374707078" target="_blank" rel="noopener noreferrer"
+                  className="text-white/40 hover:text-white transition-colors text-xs tracking-widest uppercase">
+                  Facebook
                 </a>
               </div>
             </div>
@@ -49,7 +54,7 @@ export default function Footer() {
             <div>
               <h3 className="text-xs tracking-[0.4em] uppercase mb-6 text-white/60">Customer Care</h3>
               <ul className="space-y-4">
-                {[["Size Guide", "/size-guide"], ["Shipping & Delivery", "/shipping"], ["Returns & Exchanges", "/returns"], ["Contact Us", "/contact"]].map(([label, href]) => (
+                {[["Shipping & Delivery", "/shipping"], ["Returns & Exchanges", "/returns"], ["Contact Us", "/contact"]].map(([label, href]) => (
                   <li key={href}><Link href={href} className="text-white/40 hover:text-white transition-colors text-xs tracking-wider">{label}</Link></li>
                 ))}
               </ul>
@@ -70,7 +75,7 @@ export default function Footer() {
       {/* Bottom */}
       <div className="border-t border-white/10 py-6">
         <div className="container flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-white/20 text-xs tracking-widest">© 2025 SEENWAYS. ALL RIGHTS RESERVED.</p>
+          <p className="text-white/20 text-xs tracking-widest">© 2026 SEENWAYS. ALL RIGHTS RESERVED.</p>
           <p className="text-white/20 text-xs tracking-widest">EGYPT</p>
         </div>
       </div>
