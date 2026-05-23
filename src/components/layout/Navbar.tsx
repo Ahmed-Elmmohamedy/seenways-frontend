@@ -25,6 +25,7 @@ export default function Navbar() {
   const [searchQuery, setSearchQuery] = useState("");
   const { count, openCart } = useCartStore();
   const router = useRouter();
+  const pathname = usePathname();
   const cartCount = count();
 
   useEffect(() => {
@@ -48,16 +49,20 @@ export default function Navbar() {
     }
   };
 
-  const pathname = usePathname(); const isTransparent = pathname === "/" && !scrolled && !mobileOpen;
+  const isTransparent = pathname === "/" && !scrolled && !mobileOpen;
 
   return (
     <>
       <nav dir="ltr" className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isTransparent ? "bg-transparent" : "bg-white border-b border-black/10"}`}>
         <div className="container">
-          <div className="flex items-center justify-between h-16 md:h-20">
+          <div className="flex items-center justify-between h-14 md:h-20">
+
+            {/* Mobile: Menu button */}
             <button onClick={() => setMobileOpen(true)} className={`md:hidden p-2 transition-colors ${isTransparent ? "text-white" : "text-black"}`}>
               <Menu size={22} />
             </button>
+
+            {/* Desktop: Logo + Nav links */}
             <div className="hidden md:flex items-center gap-10">
               <Link href="/">
                 <Image src={isTransparent ? LOGO_WHITE : LOGO_BLACK} alt="SEENWAYS" width={160} height={30} className="object-contain h-7 w-auto" priority />
@@ -70,29 +75,37 @@ export default function Navbar() {
                 ))}
               </div>
             </div>
+
+            {/* Mobile: Center logo icon */}
             <Link href="/" className="md:hidden absolute left-1/2 -translate-x-1/2">
               <Image src={isTransparent ? ICON_WHITE : ICON_BLACK} alt="SEENWAYS" width={32} height={32} className="h-8 w-8 object-contain" />
             </Link>
-            <div className="flex items-center gap-3">
+
+            {/* Right: Search + Cart */}
+            <div className="flex items-center gap-2">
+              {/* Desktop Search - inline */}
               {searchOpen ? (
-                <form onSubmit={handleSearch} className="flex items-center gap-2">
+                <form onSubmit={handleSearch} className="hidden md:flex items-center gap-2">
                   <input
                     autoFocus
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search..."
-                    className={`w-28 md:w-48 text-xs border-b py-1 focus:outline-none bg-transparent transition-colors ${isTransparent ? "border-white/50 text-white placeholder-white/50" : "border-gray-300 text-black placeholder-gray-400"}`}
+                    className={`w-48 text-xs border-b py-1 focus:outline-none bg-transparent transition-colors ${isTransparent ? "border-white/50 text-white placeholder-white/50" : "border-gray-300 text-black placeholder-gray-400"}`}
                   />
                   <button type="button" onClick={() => { setSearchOpen(false); setSearchQuery(""); }}
                     className={`p-1 transition-colors ${isTransparent ? "text-white/70" : "text-gray-400"} hover:text-black`}>
-                    <X size={16} />
+                    <X size={15} />
                   </button>
                 </form>
-              ) : (
-                <button onClick={() => setSearchOpen(true)} className={`p-2 transition-colors ${isTransparent ? "text-white" : "text-black"}`}>
-                  <Search size={20} />
-                </button>
-              )}
+              ) : null}
+
+              {/* Search Icon */}
+              <button onClick={() => setSearchOpen(!searchOpen)} className={`p-2 transition-colors ${isTransparent ? "text-white" : "text-black"}`}>
+                {searchOpen ? <X size={20} className="md:hidden" /> : <Search size={20} />}
+              </button>
+
+              {/* Cart */}
               <button onClick={openCart} className={`relative p-2 transition-colors ${isTransparent ? "text-white" : "text-black"}`}>
                 <ShoppingBag size={20} />
                 {cartCount > 0 && (
@@ -105,16 +118,27 @@ export default function Navbar() {
           </div>
         </div>
       </nav>
-      
-     {/* Mobile Search - inline in navbar area */}
+
+      {/* Mobile Search - drops below navbar */}
       {searchOpen && (
-        <div className="md:hidden fixed inset-0 z-40" onClick={() => { setSearchOpen(false); setSearchQuery(""); }} />
+        <>
+          <div className="fixed inset-0 z-40" onClick={() => { setSearchOpen(false); setSearchQuery(""); }} />
+          <div className={`md:hidden fixed top-14 left-0 right-0 z-50 ${isTransparent ? "bg-black/40 backdrop-blur-md" : "bg-white border-b border-gray-100 shadow-sm"}`}>
+            <form onSubmit={handleSearch} className="flex items-center gap-2 px-4 py-3">
+              <Search size={14} className={isTransparent ? "text-white/60" : "text-gray-400"} />
+              <input
+                autoFocus
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search..."
+                className={`flex-1 text-xs border-b py-1 focus:outline-none bg-transparent ${isTransparent ? "border-white/40 text-white placeholder-white/50" : "border-gray-200 text-black placeholder-gray-400"}`}
+              />
+            </form>
+          </div>
+        </>
       )}
 
-      {searchOpen && (
-        <div className="fixed inset-0 z-40" onClick={() => setSearchOpen(false)} />
-      )}
-
+      {/* Mobile Menu Drawer */}
       {mobileOpen && (
         <div className="fixed inset-0 z-50 flex">
           <div className="w-80 max-w-full bg-white h-full flex flex-col shadow-2xl">
