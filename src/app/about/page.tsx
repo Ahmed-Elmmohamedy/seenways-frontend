@@ -18,7 +18,7 @@ export default function AboutPage() {
           <div className="absolute inset-0 bg-black/50" />
           <div className="relative z-10 h-full flex items-end pb-20">
             <div className="container">
-              <p className="text-xs tracking-[0.5em] uppercase text-white/50 mb-4">EST. 2025</p>
+              <p className="text-xs tracking-[0.5em] uppercase text-white/50 mb-4">EST. 2026</p>
               <h1 className="text-7xl md:text-9xl font-display text-white leading-none">OUR STORY</h1>
             </div>
           </div>
