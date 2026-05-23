@@ -98,8 +98,8 @@ export default function ShippingPage() {
               </div>
               <div className="bg-white border border-gray-200 p-8">
                 <p className="text-xs tracking-widest uppercase text-gray-400 mb-4">Orders below 1,000 EGP</p>
-                <p className="text-5xl font-display mb-3">70 EGP</p>
-                <p className="text-gray-400 text-xs leading-relaxed">Flat rate shipping fee applied to all orders below 1,000 EGP across all governorates.</p>
+                <p className="text-5xl font-display mb-3">VARIES</p>
+                <p className="text-gray-400 text-xs leading-relaxed">Shipping fee varies by governorate and is calculated automatically at checkout when you select your governorate.</p>
               </div>
             </div>
           </div>
