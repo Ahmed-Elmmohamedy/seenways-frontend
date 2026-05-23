@@ -75,7 +75,7 @@ export default function Navbar() {
             </Link>
             <div className="flex items-center gap-3">
               {searchOpen ? (
-                <form onSubmit={handleSearch} className="flex items-center gap-2 animate-in slide-in-from-right">
+                <form onSubmit={handleSearch} className="md:flex items-center gap-2 hidden">
                   <input
                     autoFocus
                     value={searchQuery}
@@ -105,6 +105,26 @@ export default function Navbar() {
           </div>
         </div>
       </nav>
+      
+      {/* Mobile Search Bar */}
+      {searchOpen && (
+        <div className="md:hidden fixed top-14 left-0 right-0 bg-white border-b border-gray-100 z-50 px-4 py-3">
+          <form onSubmit={handleSearch} className="flex items-center gap-3">
+            <Search size={15} className="text-gray-400 flex-shrink-0" />
+            <input
+              autoFocus
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search products..."
+              className="flex-1 text-sm focus:outline-none bg-transparent"
+            />
+            <button type="button" onClick={() => { setSearchOpen(false); setSearchQuery(""); }}
+              className="text-gray-400 hover:text-black transition-colors">
+              <X size={16} />
+            </button>
+          </form>
+        </div>
+      )}
 
       {searchOpen && (
         <div className="fixed inset-0 z-40" onClick={() => setSearchOpen(false)} />
