@@ -7,6 +7,7 @@ import Footer from "@/components/layout/Footer";
 import ProductCard from "@/components/shop/ProductCard";
 import { getProducts } from "@/lib/api";
 import { Product } from "@/types";
+import { search as fbSearch } from "@/lib/fbpixel";
 
 function SearchContent() {
   const searchParams = useSearchParams();
@@ -17,6 +18,7 @@ function SearchContent() {
   useEffect(() => {
     if (!query.trim()) return;
     setLoading(true);
+    fbSearch(query);
     getProducts({ search: query }).then((r) => { setProducts(r.data.products); setLoading(false); }).catch(() => setLoading(false));
   }, [query]);
 
