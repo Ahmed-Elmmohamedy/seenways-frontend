@@ -171,6 +171,7 @@ export default function TermsPage() {
                 <p>For any questions regarding these Terms and Conditions:</p>
                 <div className="mt-4 space-y-2">
                   <p><strong className="text-black">Brand:</strong> SEENWAYS</p>
+                  <p><strong className="text-black">Email:</strong> <a href="mailto:seenwayseg@gmail.com" className="underline hover:text-black">seenwayseg@gmail.com</a></p>
                   <p><strong className="text-black">Instagram:</strong> <a href="https://www.instagram.com/seen__ways" className="underline hover:text-black">@seen__ways</a></p>
                   <p><strong className="text-black">Facebook:</strong> <a href="https://www.facebook.com/profile.php?id=100090374707078" className="underline hover:text-black">SEENWAYS on Facebook</a></p>
                   <p><strong className="text-black">Website:</strong> seenways.com</p>
