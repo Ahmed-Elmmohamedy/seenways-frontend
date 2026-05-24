@@ -127,7 +127,7 @@ export default function ProductPage() {
   return (
     <>
       <Navbar />
-      <main className="pt-20">
+      <main className="pt-20 pb-16">
         <div className="container py-8 md:py-16">
           <button onClick={() => router.back()} className="flex items-center gap-2 text-xs tracking-widest uppercase text-gray-400 hover:text-black transition-colors mb-8">
             <ArrowLeft size={12} /> Back
