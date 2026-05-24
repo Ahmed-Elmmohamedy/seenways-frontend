@@ -29,7 +29,7 @@ export function cn(...classes: (string | undefined | null | boolean)[]) {
 }
 
 export function formatPrice(price: number) {
-  return `${price.toLocaleString("ar-EG")} ج.م`;
+  return `${price.toLocaleString("en-US")} EGP`;
 }
 
 // Security: Honeypot + Rate limiting helpers
