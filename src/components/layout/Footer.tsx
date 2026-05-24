@@ -10,7 +10,7 @@ export default function Footer() {
       <div className="border-b border-white/10 py-16">
         <div className="container text-center">
           <p className="text-xs tracking-[0.4em] uppercase text-white/40 mb-4">JOIN THE CLUB</p>
-          <h2 className="text-4xl md:text-5xl font-display mb-4">GET 10% OFF YOUR FIRST ORDER</h2>
+          <h2 className="text-4xl md:text-5xl font-display mb-4">JOIN THE CLUB</h2>
           <p className="text-white/40 text-sm tracking-wider mb-10">Be the first to know about new arrivals and exclusive offers</p>
           <div className="flex max-w-md mx-auto">
             <input type="email" placeholder="YOUR EMAIL ADDRESS" className="flex-1 bg-transparent border border-white/20 px-6 py-4 text-xs tracking-widest placeholder:text-white/20 outline-none focus:border-white/50 transition-colors" />
