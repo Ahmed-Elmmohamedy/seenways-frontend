@@ -302,7 +302,7 @@ function ProductForm({ product, categories, onSave, onClose }: {
                   <p className="text-gray-400 text-xs tracking-widest uppercase">لا توجد bundle deals</p>
                 </div>
               )}
-              {form.bundles?.map((bundle, idx) => (
+              {form.bundles?.map((bundle: Bundle, idx: number) => (
                 <div key={idx} className="p-4 border border-gray-100">
                   <div className="grid grid-cols-3 gap-4">
                     <div>
