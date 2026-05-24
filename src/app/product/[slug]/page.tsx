@@ -156,7 +156,7 @@ export default function ProductPage() {
             </div>
 
             {/* Info */}
-            <div className="space-y-6 lg:pt-4" dir="ltr">
+            <div className="space-y-4 lg:pt-4" dir="ltr">
               {product.category && (
                 <p className="text-xs tracking-[0.4em] uppercase text-gray-400">{product.category.name}</p>
               )}
