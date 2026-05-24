@@ -92,7 +92,7 @@ export default function CartPage() {
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-500 tracking-wider">Shipping</span>
-                    <span className="text-green-600 text-xs tracking-wider">FREE</span>
+                    <span className="text-gray-400 text-xs tracking-wider">Calculated at checkout</span>
                   </div>
                 </div>
                 <div className="border-t border-gray-200 pt-6 mb-8">
