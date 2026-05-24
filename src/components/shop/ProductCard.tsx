@@ -9,8 +9,9 @@ import { v4 as uuidv4 } from "uuid";
 import toast from "react-hot-toast";
 
 export default function ProductCard({ product }: { product: Product }) {
-  const img1 = product.images?.[0] || "https://placehold.co/400x533/f5f5f5/000?text=SEENWAYS";
-  const img2 = product.images?.[1] || img1;
+  const firstVariantImg = (product as any).colorVariants?.[0]?.images?.[0];
+  const img1 = product.images?.[0] || firstVariantImg || "https://placehold.co/400x533/f5f5f5/000?text=SEENWAYS";
+  const img2 = product.images?.[1] || (product as any).colorVariants?.[0]?.images?.[1] || img1;
   const discount = product.oldPrice ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100) : null;
   const { addItem } = useCartStore();
   const { toggle, has } = useWishlistStore();
