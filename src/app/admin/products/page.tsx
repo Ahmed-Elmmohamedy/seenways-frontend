@@ -161,7 +161,7 @@ function ProductForm({ product, categories, onSave, onClose }: {
   const removeVariant = (idx: number) => setForm({ ...form, colorVariants: form.colorVariants.filter((_, i) => i !== idx) });
 
   const addBundle = () => setForm({ ...form, bundles: [...form.bundles, { quantity: 2, price: 0 }] });
-  const removeBundle = (idx: number) => setForm({ ...form, bundles: form.bundles.filter((_, i) => i !== idx) });
+  const removeBundle = (idx: number) => setForm({ ...form, bundles: form.bundles.filter((_: Bundle, i: number) => i !== idx) });
   const updateBundle = (idx: number, field: keyof Bundle, value: number) => {
     const bundles = [...form.bundles];
     bundles[idx] = { ...bundles[idx], [field]: value };
