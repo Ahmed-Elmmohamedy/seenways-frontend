@@ -256,9 +256,9 @@ export default function ProductPage() {
                   ["Returns", "14-day return policy"],
                   ["Shipping", "Calculated at checkout"],
                 ].map(([k, v]) => (
-                  <div key={k} className="flex items-center justify-between text-xs">
-                    <span className="text-gray-400 tracking-widest uppercase">{k}</span>
-                    <span className="text-black tracking-wider">{v}</span>
+                  <div key={k} className="flex items-center justify-between text-xs gap-4">
+                     <span className="text-gray-400 tracking-widest uppercase shrink-0">{k}</span>
+                     <span className="text-black tracking-wider text-right">{v}</span>
                   </div>
                 ))}
               </div>
