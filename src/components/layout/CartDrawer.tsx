@@ -80,7 +80,7 @@ export default function CartDrawer() {
             </div>
             <div className="flex justify-between items-center pb-4 border-b border-gray-100">
               <span className="text-xs tracking-widest uppercase text-gray-500">Shipping</span>
-              <span className="text-xs text-green-600 tracking-wider">FREE</span>
+              <span className="text-xs text-gray-400 tracking-wider">Calculated at checkout</span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-sm font-medium tracking-wider">TOTAL</span>
