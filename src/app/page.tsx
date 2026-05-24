@@ -41,9 +41,7 @@ export default function HomePage() {
           <Image src="https://images.unsplash.com/photo-1536766820879-059fec98ec0a?w=1600&q=80" alt="SEENWAYS" fill className="object-cover object-center" priority />
           <div className="absolute inset-0 bg-black/35" />
           <div className="relative z-10 h-full flex items-end pb-32 md:pb-24">
-            <div className="container">
             <div className="container" dir="ltr">
-            <div className="container">
               <p className="text-[10px] tracking-[0.4em] uppercase text-white/60 mb-3">NEW COLLECTION 2026</p>
               <h1 className="text-3xl sm:text-5xl md:text-7xl font-display text-white leading-tight mb-2">
                 SEENWAYS
@@ -123,12 +121,12 @@ export default function HomePage() {
               <div className="relative aspect-[4/5] overflow-hidden">
                 <Image src="https://images.unsplash.com/photo-1490578474895-699cd4e2cf59?w=800&q=80" alt="Philosophy" fill className="object-cover" />
               </div>
-              <div className="md:pl-12">
+              <div className="md:pl-12" dir="ltr">
                 <p className="text-xs tracking-[0.5em] uppercase text-white/30 mb-8">OUR PHILOSOPHY</p>
                 <h2 className="text-5xl md:text-7xl font-display leading-tight mb-8">
                   DESIGNED<br />FOR EVERYDAY<br />CONFIDENCE.
                 </h2>
-                <p className="text-white/40 text-sm leading-relaxed tracking-wider mb-12 max-w-sm" dir="ltr">
+                <p className="text-white/40 text-sm leading-relaxed tracking-wider mb-12 max-w-sm">
                   At SEENWAYS, we believe in creating timeless pieces that speak through quality, fit, and simplicity. Every piece is crafted for the modern Egyptian man.
                 </p>
                 <Link href="/about" className="inline-flex items-center gap-3 border border-white/30 px-10 py-4 text-xs tracking-widest uppercase hover:bg-white hover:text-black transition-all duration-500">
