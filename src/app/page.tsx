@@ -37,7 +37,7 @@ export default function HomePage() {
       <main>
 
         {/* Hero */}
-        <section className="relative h-screen overflow-hidden">
+          <section className="relative h-screen min-h-[600px] overflow-hidden">
           <Image src="https://images.unsplash.com/photo-1536766820879-059fec98ec0a?w=1600&q=80" alt="SEENWAYS" fill className="object-cover object-center" priority />
           <div className="absolute inset-0 bg-black/35" />
           <div className="relative z-10 h-full flex items-end pb-32 md:pb-24">
