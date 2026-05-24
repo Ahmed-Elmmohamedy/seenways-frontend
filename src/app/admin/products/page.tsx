@@ -5,27 +5,27 @@ import { Plus, Trash2, Edit2, X, Upload, Image as ImageIcon, ChevronDown, Chevro
 import { getAdminProducts, createProduct, updateProduct, deleteProduct, getCategories, uploadImage } from "@/lib/api";
 import { formatPrice } from "@/lib/utils";
 
-// ============ TYPES ============
 interface SizeVariant { size: string; stock: number; }
 interface ColorVariant { id?: string; name: string; images: string[]; sizes: SizeVariant[]; }
+interface Bundle { quantity: number; price: number; }
 interface Product {
   id: string; name: string; slug: string; price: number; oldPrice?: number;
   images: string[]; stock: number; isActive: boolean; isFeatured: boolean;
   categoryId?: string; category?: { name: string };
   metaTitle?: string; metaDescription?: string; metaKeywords?: string;
-  colorVariants: ColorVariant[];
+  colorVariants: ColorVariant[]; bundles?: Bundle[];
 }
 
 const emptyVariant = (): ColorVariant => ({ name: "", images: [], sizes: [{ size: "", stock: 0 }] });
 
 const emptyForm = {
-  name: "", description: "", price: "", oldPrice: "", stock: "0",
+  name: "", slug: "", description: "", price: "", oldPrice: "", stock: "0",
   isActive: true, isFeatured: false, categoryId: "",
   metaTitle: "", metaDescription: "", metaKeywords: "",
   colorVariants: [emptyVariant()] as ColorVariant[],
+  bundles: [] as Bundle[],
 };
 
-// ============ COLOR VARIANT EDITOR ============
 function ColorVariantEditor({ variant, index, onChange, onRemove, onUpload }: {
   variant: ColorVariant; index: number;
   onChange: (v: ColorVariant) => void;
@@ -46,27 +46,21 @@ function ColorVariantEditor({ variant, index, onChange, onRemove, onUpload }: {
 
   return (
     <div className="border border-gray-200 rounded-sm overflow-hidden">
-      {/* Header */}
       <div className="flex items-center justify-between bg-gray-50 px-4 py-3">
         <div className="flex items-center gap-3 flex-1">
           <button type="button" onClick={() => setOpen(!open)} className="text-gray-400">
             {open ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
           </button>
-          <input
-            value={variant.name}
-            onChange={(e) => onChange({ ...variant, name: e.target.value })}
+          <input value={variant.name} onChange={(e) => onChange({ ...variant, name: e.target.value })}
             placeholder="اسم اللون (مثلاً: أسود، Navy Blue، Off White...)"
-            className="flex-1 bg-transparent text-sm focus:outline-none font-medium"
-          />
+            className="flex-1 bg-transparent text-sm focus:outline-none font-medium" />
         </div>
         <button type="button" onClick={onRemove} className="text-gray-300 hover:text-red-400 transition-colors mr-2">
           <X size={14} />
         </button>
       </div>
-
       {open && (
         <div className="p-4 space-y-4">
-          {/* Images */}
           <div>
             <p className="text-[10px] tracking-widest uppercase text-gray-400 mb-2">صور اللون</p>
             <div className="flex flex-wrap gap-2 mb-2">
@@ -87,11 +81,9 @@ function ColorVariantEditor({ variant, index, onChange, onRemove, onUpload }: {
               </label>
             </div>
           </div>
-
-          {/* Sizes */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <p className="text-[10px] tracking-widest uppercase text-gray-400">المقاسات والمخزون</p>
+              <p className="text-[10px] tracking-widests uppercase text-gray-400">المقاسات والمخزون</p>
               <button type="button" onClick={addSize}
                 className="text-[10px] tracking-widest uppercase flex items-center gap-1 text-gray-400 hover:text-black transition-colors">
                 <Plus size={10} /> إضافة مقاس
@@ -119,30 +111,38 @@ function ColorVariantEditor({ variant, index, onChange, onRemove, onUpload }: {
   );
 }
 
-// ============ PRODUCT FORM ============
 function ProductForm({ product, categories, onSave, onClose }: {
   product?: Product; categories: any[];
   onSave: (data: any) => Promise<void>; onClose: () => void;
 }) {
   const [form, setForm] = useState(product ? {
-    name: product.name, description: (product as any).description || "",
+    name: product.name, slug: product.slug || "",
+    description: (product as any).description || "",
     price: String(product.price), oldPrice: product.oldPrice ? String(product.oldPrice) : "",
     stock: String(product.stock), isActive: product.isActive, isFeatured: product.isFeatured,
     categoryId: product.categoryId || "",
     metaTitle: product.metaTitle || "", metaDescription: product.metaDescription || "",
     metaKeywords: product.metaKeywords || "",
     colorVariants: product.colorVariants?.length ? product.colorVariants : [emptyVariant()],
+    bundles: (product as any).bundles || [] as Bundle[],
   } : { ...emptyForm });
   const [saving, setSaving] = useState(false);
-  const [tab, setTab] = useState<"basic" | "variants" | "seo">("basic");
+  const [tab, setTab] = useState<"basic" | "variants" | "bundles" | "seo">("basic");
+  const [slugManuallyEdited, setSlugManuallyEdited] = useState(!!product);
+
+  useEffect(() => {
+    if (!slugManuallyEdited && form.name) {
+      const autoSlug = form.name.toLowerCase().trim()
+        .replace(/\s+/g, "-").replace(/[^\w-]/g, "").replace(/--+/g, "-");
+      setForm(prev => ({ ...prev, slug: autoSlug }));
+    }
+  }, [form.name]);
 
   const handleUpload = async (colorIdx: number, files: FileList) => {
     const uploaded: string[] = [];
     for (const file of Array.from(files)) {
-      try {
-        const res = await uploadImage(file);
-        uploaded.push(res.data.url);
-      } catch { toast.error("فشل رفع صورة"); }
+      try { const res = await uploadImage(file); uploaded.push(res.data.url); }
+      catch { toast.error("فشل رفع صورة"); }
     }
     if (uploaded.length) {
       const variants = [...form.colorVariants];
@@ -160,6 +160,14 @@ function ProductForm({ product, categories, onSave, onClose }: {
   const addVariant = () => setForm({ ...form, colorVariants: [...form.colorVariants, emptyVariant()] });
   const removeVariant = (idx: number) => setForm({ ...form, colorVariants: form.colorVariants.filter((_, i) => i !== idx) });
 
+  const addBundle = () => setForm({ ...form, bundles: [...form.bundles, { quantity: 2, price: 0 }] });
+  const removeBundle = (idx: number) => setForm({ ...form, bundles: form.bundles.filter((_, i) => i !== idx) });
+  const updateBundle = (idx: number, field: keyof Bundle, value: number) => {
+    const bundles = [...form.bundles];
+    bundles[idx] = { ...bundles[idx], [field]: value };
+    setForm({ ...form, bundles });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.name || !form.price) { toast.error("الاسم والسعر مطلوبان"); return; }
@@ -167,40 +175,40 @@ function ProductForm({ product, categories, onSave, onClose }: {
     try {
       await onSave({
         ...form,
+        slug: form.slug || form.name.toLowerCase().replace(/\s+/g, "-").replace(/[^\w-]/g, ""),
         price: parseFloat(form.price),
         oldPrice: form.oldPrice ? parseFloat(form.oldPrice) : null,
         stock: parseInt(form.stock) || 0,
         colorVariants: form.colorVariants.filter(cv => cv.name.trim()),
+        bundles: form.bundles?.length > 0 ? form.bundles : null,
       });
     } finally { setSaving(false); }
   };
 
   const tabs = [
     { id: "basic", label: "البيانات الأساسية" },
-    { id: "variants", label: `الألوان والمقاسات (${form.colorVariants.length})` },
+    { id: "variants", label: `الألوان (${form.colorVariants.length})` },
+    { id: "bundles", label: `Bundles (${form.bundles?.length || 0})` },
     { id: "seo", label: "SEO" },
   ];
 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={onClose}>
       <div className="bg-white w-full max-w-3xl max-h-[90vh] flex flex-col shadow-2xl" onClick={e => e.stopPropagation()} dir="rtl">
-        {/* Header */}
         <div className="flex items-center justify-between p-5 border-b border-gray-100">
           <h2 className="text-lg font-display tracking-widest">{product ? "تعديل المنتج" : "منتج جديد"}</h2>
           <button onClick={onClose} className="text-gray-400 hover:text-black"><X size={18} /></button>
         </div>
-
-        {/* Tabs */}
-        <div className="flex border-b border-gray-100">
+        <div className="flex border-b border-gray-100 overflow-x-auto">
           {tabs.map(t => (
             <button key={t.id} onClick={() => setTab(t.id as any)}
-              className={`px-5 py-3 text-xs tracking-widest uppercase transition-colors ${tab === t.id ? "border-b-2 border-black font-medium" : "text-gray-400 hover:text-black"}`}>
+              className={`px-4 py-3 text-xs tracking-widest uppercase transition-colors whitespace-nowrap ${tab === t.id ? "border-b-2 border-black font-medium" : "text-gray-400 hover:text-black"}`}>
               {t.label}
             </button>
           ))}
         </div>
-
         <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-5">
+
           {/* Basic Tab */}
           {tab === "basic" && (
             <div className="space-y-4">
@@ -210,13 +218,21 @@ function ProductForm({ product, categories, onSave, onClose }: {
                   <input value={form.name} onChange={e => setForm({ ...form, name: e.target.value })}
                     className="w-full border border-gray-200 px-4 py-3 text-sm focus:outline-none focus:border-black transition-colors" />
                 </div>
+                <div className="col-span-2">
+                  <label className="block text-[10px] tracking-widest uppercase mb-2 text-gray-400">Slug (رابط المنتج) *</label>
+                  <input value={form.slug}
+                    onChange={e => { setSlugManuallyEdited(true); setForm({ ...form, slug: e.target.value.toLowerCase().replace(/\s+/g, "-").replace(/[^\w-]/g, "") }); }}
+                    placeholder="مثال: black-tshirt-slim-fit"
+                    className="w-full border border-gray-200 px-4 py-3 text-sm focus:outline-none focus:border-black transition-colors font-mono" />
+                  {form.slug && <p className="text-[10px] text-gray-400 mt-1">seenways.com/product/<span className="text-black font-mono">{form.slug}</span></p>}
+                </div>
                 <div>
                   <label className="block text-[10px] tracking-widest uppercase mb-2 text-gray-400">السعر (ج.م) *</label>
                   <input type="number" value={form.price} onChange={e => setForm({ ...form, price: e.target.value })}
                     className="w-full border border-gray-200 px-4 py-3 text-sm focus:outline-none focus:border-black transition-colors" />
                 </div>
                 <div>
-                  <label className="block text-[10px] tracking-widest uppercase mb-2 text-gray-400">السعر القديم (اختياري)</label>
+                  <label className="block text-[10px] tracking-widest uppercase mb-2 text-gray-400">السعر القديم</label>
                   <input type="number" value={form.oldPrice} onChange={e => setForm({ ...form, oldPrice: e.target.value })}
                     className="w-full border border-gray-200 px-4 py-3 text-sm focus:outline-none focus:border-black transition-colors" />
                 </div>
@@ -229,7 +245,7 @@ function ProductForm({ product, categories, onSave, onClose }: {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-[10px] tracking-widest uppercase mb-2 text-gray-400">المخزون الإجمالي</label>
+                  <label className="block text-[10px] tracking-widest uppercase mb-2 text-gray-400">المخزون</label>
                   <input type="number" value={form.stock} onChange={e => setForm({ ...form, stock: e.target.value })}
                     className="w-full border border-gray-200 px-4 py-3 text-sm focus:outline-none focus:border-black transition-colors" />
                 </div>
@@ -271,6 +287,56 @@ function ProductForm({ product, categories, onSave, onClose }: {
             </div>
           )}
 
+          {/* Bundles Tab */}
+          {tab === "bundles" && (
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <p className="text-xs text-gray-400">أضف عروض الشراء بالجملة - مثلاً: قطعتين بسعر مخصص</p>
+                <button type="button" onClick={addBundle}
+                  className="flex items-center gap-2 bg-black text-white px-4 py-2.5 text-xs tracking-widest uppercase hover:bg-gray-900 transition-colors">
+                  <Plus size={12} /> إضافة Bundle
+                </button>
+              </div>
+              {(!form.bundles || form.bundles.length === 0) && (
+                <div className="text-center py-12 border border-dashed border-gray-200">
+                  <p className="text-gray-400 text-xs tracking-widest uppercase">لا توجد bundle deals</p>
+                </div>
+              )}
+              {form.bundles?.map((bundle, idx) => (
+                <div key={idx} className="p-4 border border-gray-100">
+                  <div className="grid grid-cols-3 gap-4">
+                    <div>
+                      <label className="block text-[10px] tracking-widest uppercase mb-2 text-gray-400">عدد القطع</label>
+                      <input type="number" min="2" value={bundle.quantity}
+                        onChange={e => updateBundle(idx, "quantity", parseInt(e.target.value) || 2)}
+                        className="w-full border border-gray-200 px-4 py-3 text-sm focus:outline-none focus:border-black transition-colors" />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] tracking-widest uppercase mb-2 text-gray-400">السعر الإجمالي (ج.م)</label>
+                      <input type="number" min="0" value={bundle.price}
+                        onChange={e => updateBundle(idx, "price", parseFloat(e.target.value) || 0)}
+                        className="w-full border border-gray-200 px-4 py-3 text-sm focus:outline-none focus:border-black transition-colors" />
+                    </div>
+                    <div className="flex flex-col justify-end pb-3">
+                      <p className="text-xs text-green-600 mb-1">
+                        وفّر {formatPrice((bundle.quantity * parseFloat(form.price || "0")) - bundle.price)}
+                      </p>
+                      <p className="text-[10px] text-gray-400">
+                        بدل {formatPrice(bundle.quantity * parseFloat(form.price || "0"))}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex justify-end mt-2">
+                    <button type="button" onClick={() => removeBundle(idx)}
+                      className="text-gray-300 hover:text-red-400 transition-colors text-xs tracking-widest uppercase">
+                      حذف
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
           {/* SEO Tab */}
           {tab === "seo" && (
             <div className="space-y-4">
@@ -282,7 +348,7 @@ function ProductForm({ product, categories, onSave, onClose }: {
                 <p className="text-[10px] text-gray-400 mt-1">{form.metaTitle.length}/60</p>
               </div>
               <div>
-                <label className="block text-[10px] tracking-widest uppercase mb-2 text-gray-400">Meta Description</label>
+                <label className="block text-[10px] tracking-widests uppercase mb-2 text-gray-400">Meta Description</label>
                 <textarea value={form.metaDescription} onChange={e => setForm({ ...form, metaDescription: e.target.value })}
                   placeholder="وصف الصفحة في Google (160 حرف)" rows={3}
                   className="w-full border border-gray-200 px-4 py-3 text-sm focus:outline-none focus:border-black transition-colors resize-none" />
@@ -294,12 +360,11 @@ function ProductForm({ product, categories, onSave, onClose }: {
                   placeholder="كلمة1, كلمة2, كلمة3"
                   className="w-full border border-gray-200 px-4 py-3 text-sm focus:outline-none focus:border-black transition-colors" />
               </div>
-              {/* Preview */}
               {(form.metaTitle || form.metaDescription) && (
                 <div className="border border-gray-100 p-4 bg-gray-50">
                   <p className="text-[10px] tracking-widest uppercase text-gray-400 mb-3">معاينة Google</p>
                   <p className="text-blue-600 text-sm hover:underline cursor-pointer">{form.metaTitle || form.name}</p>
-                  <p className="text-green-700 text-xs mt-0.5">seenways.com/product/{form.name.toLowerCase().replace(/\s+/g, "-")}</p>
+                  <p className="text-green-700 text-xs mt-0.5">seenways.com/product/{form.slug}</p>
                   <p className="text-gray-500 text-xs mt-1">{form.metaDescription}</p>
                 </div>
               )}
@@ -307,7 +372,6 @@ function ProductForm({ product, categories, onSave, onClose }: {
           )}
         </form>
 
-        {/* Footer */}
         <div className="p-5 border-t border-gray-100 flex gap-3">
           <button onClick={handleSubmit as any} disabled={saving}
             className="flex-1 bg-black text-white py-3 text-xs tracking-widest uppercase hover:bg-gray-900 transition-colors disabled:opacity-50">
@@ -322,7 +386,6 @@ function ProductForm({ product, categories, onSave, onClose }: {
   );
 }
 
-// ============ MAIN PAGE ============
 export default function AdminProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
@@ -354,8 +417,6 @@ export default function AdminProductsPage() {
     catch { toast.error("فشل الحذف"); }
   };
 
-  const handleEdit = (p: Product) => { setEditing(p); setShowForm(true); };
-
   return (
     <div dir="rtl">
       <div className="flex items-center justify-between mb-6">
@@ -368,8 +429,6 @@ export default function AdminProductsPage() {
           <Plus size={14} /> منتج جديد
         </button>
       </div>
-
-      {/* Search */}
       <div className="flex gap-3 mb-5">
         <input value={search} onChange={e => setSearch(e.target.value)}
           onKeyDown={e => e.key === "Enter" && load()}
@@ -379,8 +438,6 @@ export default function AdminProductsPage() {
           بحث
         </button>
       </div>
-
-      {/* Table */}
       <div className="bg-white border border-gray-100 overflow-hidden">
         {loading ? (
           <div className="p-6 space-y-3">{[...Array(4)].map((_, i) => <div key={i} className="h-16 bg-gray-50 animate-pulse rounded" />)}</div>
@@ -401,8 +458,8 @@ export default function AdminProductsPage() {
                   <td className="px-5 py-4">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 bg-gray-50 overflow-hidden flex-shrink-0">
-                        {p.colorVariants?.[0]?.images?.[0] || p.images?.[0] ? (
-                          <img src={p.colorVariants?.[0]?.images?.[0] || p.images?.[0]} alt={p.name} className="w-full h-full object-cover" />
+                        {(p as any).colorVariants?.[0]?.images?.[0] || p.images?.[0] ? (
+                          <img src={(p as any).colorVariants?.[0]?.images?.[0] || p.images?.[0]} alt={p.name} className="w-full h-full object-cover" />
                         ) : <ImageIcon size={16} className="text-gray-200 m-auto mt-2.5" />}
                       </div>
                       <div>
@@ -427,7 +484,7 @@ export default function AdminProductsPage() {
                   </td>
                   <td className="px-5 py-4">
                     <div className="flex items-center gap-3 justify-end">
-                      <button onClick={() => handleEdit(p)} className="text-gray-400 hover:text-black transition-colors"><Edit2 size={15} /></button>
+                      <button onClick={() => { setEditing(p); setShowForm(true); }} className="text-gray-400 hover:text-black transition-colors"><Edit2 size={15} /></button>
                       <button onClick={() => handleDelete(p.id, p.name)} className="text-gray-300 hover:text-red-400 transition-colors"><Trash2 size={15} /></button>
                     </div>
                   </td>
@@ -440,7 +497,6 @@ export default function AdminProductsPage() {
           </table>
         )}
       </div>
-
       {showForm && (
         <ProductForm product={editing} categories={categories}
           onSave={handleSave} onClose={() => { setShowForm(false); setEditing(undefined); }} />
