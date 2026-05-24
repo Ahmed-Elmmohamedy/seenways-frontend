@@ -250,15 +250,15 @@ export default function ProductPage() {
               </div>
 
               {/* Info */}
-              <div className="border-t border-gray-100 pt-6 space-y-2">
+              <div className="border-t border-gray-100 pt-6 space-y-3">
                 {[
                   ["Payment", "Cash on Delivery"],
                   ["Returns", "14-day return policy"],
                   ["Shipping", "Calculated at checkout"],
                 ].map(([k, v]) => (
-                  <div key={k} className="flex justify-between text-xs">
-                    <span className="text-gray-400">{k}</span>
-                    <span>{v}</span>
+                  <div key={k} className="flex items-center justify-between text-xs">
+                    <span className="text-gray-400 tracking-widest uppercase">{k}</span>
+                    <span className="text-black tracking-wider">{v}</span>
                   </div>
                 ))}
               </div>
