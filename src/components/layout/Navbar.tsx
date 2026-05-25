@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ShoppingBag, Menu, X, Search } from "lucide-react";
+import { ShoppingBag, Menu, X, Search, Heart } from "lucide-react";
 import { useCartStore } from "@/lib/store";
 import { useRouter, usePathname } from "next/navigation";
 
