@@ -65,6 +65,9 @@ export const uploadImage = (file: File) => {
   return api.post("/upload/image", fd, { headers: { "Content-Type": "multipart/form-data" } });
 };
 
+// Track Order
+export const trackOrder = (orderNumber: string, phone: string) => api.get(`/orders/track/${orderNumber}`, { params: { phone } });
+
 // Governorates
 export const getGovernorates = () => api.get("/governorates");
 export const getAdminGovernorates = () => api.get("/governorates/admin/all");
