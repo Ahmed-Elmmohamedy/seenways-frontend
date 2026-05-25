@@ -21,13 +21,25 @@ export const useCartStore = create<CartStore>()(
       items: [],
       isOpen: false,
       addItem: (item) => {
-        const existing = get().items.find((i) => i.productId === item.productId && i.size === item.size && i.color === item.color);
-        if (existing) {
-          set({ items: get().items.map((i) => i.id === existing.id ? { ...i, quantity: i.quantity + item.quantity } : i) });
-        } else {
-          set({ items: [...get().items, item] });
+        // Bundle items never merge with existing items
+        if (item.isBundle) {
+          set({ items: [...get().items, item], isOpen: true });
+          return;
         }
-        set({ isOpen: true });
+        // Regular items: merge if same product+size+color
+        const existing = get().items.find(
+          (i) => !i.isBundle && i.productId === item.productId && i.size === item.size && i.color === item.color
+        );
+        if (existing) {
+          set({
+            items: get().items.map((i) =>
+              i.id === existing.id ? { ...i, quantity: i.quantity + item.quantity } : i
+            ),
+            isOpen: true,
+          });
+        } else {
+          set({ items: [...get().items, item], isOpen: true });
+        }
       },
       removeItem: (id) => set({ items: get().items.filter((i) => i.id !== id) }),
       updateQuantity: (id, qty) => {
@@ -38,7 +50,10 @@ export const useCartStore = create<CartStore>()(
       openCart: () => set({ isOpen: true }),
       closeCart: () => set({ isOpen: false }),
       total: () => get().items.reduce((s, i) => s + i.price * i.quantity, 0),
-      count: () => get().items.reduce((s, i) => s + i.quantity, 0),
+      count: () => get().items.reduce((s, i) => {
+        if (i.isBundle) return s + (i.bundleQuantity || 1);
+        return s + i.quantity;
+      }, 0),
     }),
     { name: "seenways-cart-v2" }
   )
@@ -76,8 +91,14 @@ export const useAuthStore = create<AuthStore>()(
     (set) => ({
       token: null,
       admin: null,
-      setAuth: (token, admin) => { localStorage.setItem("seenways_token", token); set({ token, admin: admin as AuthStore["admin"] }); },
-      logout: () => { localStorage.removeItem("seenways_token"); set({ token: null, admin: null }); },
+      setAuth: (token, admin) => {
+        localStorage.setItem("seenways_token", token);
+        set({ token, admin: admin as AuthStore["admin"] });
+      },
+      logout: () => {
+        localStorage.removeItem("seenways_token");
+        set({ token: null, admin: null });
+      },
     }),
     { name: "seenways-auth" }
   )
