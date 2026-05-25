@@ -22,6 +22,12 @@ export interface Category {
   slug: string;
 }
 
+export interface BundleItem {
+  color: string;
+  size: string;
+  image?: string;
+}
+
 export interface CartItem {
   id: string;
   productId: string;
@@ -32,6 +38,10 @@ export interface CartItem {
   color?: string;
   quantity: number;
   slug: string;
+  isBundle?: boolean;
+  bundleQuantity?: number;
+  bundleOriginalPrice?: number;
+  bundleItems?: BundleItem[];
 }
 
 export interface Order {
