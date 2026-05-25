@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { ShoppingBag, Menu, X, Search, Heart } from "lucide-react";
-import { useCartStore } from "@/lib/store";
+import { useCartStore, useWishlistStore } from "@/lib/store";
 import { useRouter, usePathname } from "next/navigation";
 
 const LOGO_BLACK = "https://qxkevpcrzpywtalzctsz.supabase.co/storage/v1/object/public/seenways-images/logo-black-hq.png";
@@ -24,6 +24,7 @@ export default function Navbar() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const { count, openCart } = useCartStore();
+  const { items: wishlistItems } = useWishlistStore();
   const router = useRouter();
   const pathname = usePathname();
   const cartCount = count();
@@ -99,6 +100,16 @@ export default function Navbar() {
                   </button>
                 </form>
               ) : null}
+
+              {/* Wishlist */}
+              <Link href="/wishlist" className={`relative p-2 transition-colors ${isTransparent ? "text-white" : "text-black"}`}>
+                <Heart size={20} />
+                {wishlistItems.length > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 bg-black text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center">
+                    {wishlistItems.length}
+                  </span>
+                )}
+              </Link>
 
               {/* Search Icon */}
               <button onClick={() => setSearchOpen(!searchOpen)} className={`p-2 transition-colors ${isTransparent ? "text-white" : "text-black"}`}>
