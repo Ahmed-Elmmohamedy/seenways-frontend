@@ -91,6 +91,7 @@ export default function CheckoutPage() {
           }
           return { productId: i.productId, quantity: i.quantity, size: i.size || null, color: i.color || null };
         }),
+      });
       setOrderNumber(res.data.orderNumber);
       // Track Purchase
       fbPurchase({
