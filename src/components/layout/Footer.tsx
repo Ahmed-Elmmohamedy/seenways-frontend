@@ -54,7 +54,7 @@ export default function Footer() {
             <div>
               <h3 className="text-xs tracking-[0.4em] uppercase mb-6 text-white/60">Customer Care</h3>
               <ul className="space-y-4">
-                {[["Shipping & Delivery", "/shipping"], ["Returns & Exchanges", "/returns"], ["Contact Us", "/contact"]].map(([label, href]) => (
+                {[["Track Order", "/track-order"], ["Shipping & Delivery", "/shipping"], ["Returns & Exchanges", "/returns"], ["Contact Us", "/contact"]].map(([label, href]) => (
                   <li key={href}><Link href={href} className="text-white/40 hover:text-white transition-colors text-xs tracking-wider">{label}</Link></li>
                 ))}
               </ul>
