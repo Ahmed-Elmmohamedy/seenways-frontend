@@ -87,18 +87,23 @@ export default function ProductPage() {
 
   const handleAddBundle = () => {
     if (!product || !bundleModal) return;
-    bundleSelections.forEach((sel, idx) => {
-      addItem({
-        id: `${product.id}-${sel.color?.name}-${sel.size?.size}-bundle-${Date.now()}-${idx}`,
-        productId: product.id,
-        slug: product.slug,
-        name: `${product.name} (Bundle x${bundleModal.quantity})`,
-        price: idx === 0 ? bundleModal.price : 0,
+    // Bundle = single cart item with all pieces data inside
+    addItem({
+      id: `bundle-${product.id}-${Date.now()}`,
+      productId: product.id,
+      slug: product.slug,
+      name: product.name,
+      price: bundleModal.price,
+      image: bundleSelections[0]?.color?.images?.[0] || currentImages[0],
+      quantity: 1,
+      isBundle: true,
+      bundleQuantity: bundleModal.quantity,
+      bundleOriginalPrice: bundleModal.quantity * product.price,
+      bundleItems: bundleSelections.map(sel => ({
+        color: sel.color?.name || "",
+        size: sel.size?.size || "",
         image: sel.color?.images?.[0] || currentImages[0],
-        size: sel.size?.size,
-        color: sel.color?.name,
-        quantity: 1,
-      });
+      })),
     });
     setBundleModal(null);
     toast.success(`Bundle of ${bundleModal.quantity} added to cart!`);
@@ -257,8 +262,8 @@ export default function ProductPage() {
                   ["Shipping", "Calculated at checkout"],
                 ].map(([k, v]) => (
                   <div key={k} className="flex items-center justify-between text-xs gap-4">
-                     <span className="text-gray-400 tracking-widest uppercase shrink-0">{k}</span>
-                     <span className="text-black tracking-wider text-right">{v}</span>
+                    <span className="text-gray-400 tracking-widest uppercase shrink-0">{k}</span>
+                    <span className="text-black tracking-wider text-right">{v}</span>
                   </div>
                 ))}
               </div>
