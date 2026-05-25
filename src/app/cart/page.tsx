@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import { Trash2, ShoppingBag, ArrowRight, ArrowLeft } from "lucide-react";
+import { Trash2, ShoppingBag, ArrowRight, ArrowLeft, Package } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { useCartStore } from "@/lib/store";
@@ -34,7 +34,6 @@ export default function CartPage() {
       <Navbar />
       <main className="pt-20">
         <div className="container py-12 md:py-20">
-          {/* Header */}
           <div className="flex items-end justify-between mb-12">
             <div>
               <p className="text-xs tracking-[0.4em] uppercase text-gray-400 mb-2">{items.length} ITEMS</p>
@@ -49,34 +48,94 @@ export default function CartPage() {
             {/* Items */}
             <div className="lg:col-span-2 divide-y divide-gray-100">
               {items.map((item) => (
-                <div key={item.id} className="flex gap-6 py-8">
-                  <Link href={`/product/${item.slug}`} className="relative w-24 h-32 md:w-28 md:h-36 bg-gray-50 flex-shrink-0 overflow-hidden">
-                    <Image src={item.image || "https://placehold.co/200x267/f5f5f5/000?text=SW"} alt={item.name} fill className="object-cover" />
-                  </Link>
-                  <div className="flex-1 flex flex-col justify-between">
+                <div key={item.id} className="py-8">
+                  {item.isBundle ? (
+                    /* Bundle Item */
                     <div>
-                      <div className="flex items-start justify-between gap-4">
-                        <div>
-                          <h3 className="text-sm font-medium tracking-wide uppercase">{item.name}</h3>
-                          <div className="flex gap-4 mt-2">
-                            {item.size && <span className="text-xs text-gray-400 tracking-wider">SIZE: {item.size}</span>}
-                            {item.color && <span className="text-xs text-gray-400 tracking-wider">COLOR: {item.color}</span>}
+                      <div className="flex gap-6">
+                        <Link href={`/product/${item.slug}`} className="relative w-24 h-32 md:w-28 md:h-36 bg-gray-50 flex-shrink-0 overflow-hidden">
+                          <Image src={item.image || "https://placehold.co/200x267/f5f5f5/000?text=SW"} alt={item.name} fill className="object-cover" />
+                          <div className="absolute top-2 left-2 bg-black text-white text-[9px] px-1.5 py-0.5 tracking-widest">
+                            x{item.bundleQuantity}
+                          </div>
+                        </Link>
+                        <div className="flex-1">
+                          <div className="flex items-start justify-between gap-4">
+                            <div>
+                              <h3 className="text-sm font-medium tracking-wide uppercase">{item.name}</h3>
+                              <div className="flex items-center gap-2 mt-1">
+                                <Package size={11} className="text-gray-400" />
+                                <span className="text-xs text-gray-400 tracking-widest uppercase">Bundle x{item.bundleQuantity}</span>
+                              </div>
+                            </div>
+                            <button onClick={() => removeItem(item.id)} className="text-gray-300 hover:text-red-400 transition-colors flex-shrink-0">
+                              <Trash2 size={15} />
+                            </button>
+                          </div>
+                          <div className="mt-3">
+                            <div className="flex items-center gap-3">
+                              <span className="text-sm font-medium">{formatPrice(item.price)}</span>
+                              {item.bundleOriginalPrice && (
+                                <span className="text-xs text-gray-400 line-through">{formatPrice(item.bundleOriginalPrice)}</span>
+                              )}
+                              {item.bundleOriginalPrice && (
+                                <span className="text-xs text-green-600">Save {formatPrice(item.bundleOriginalPrice - item.price)}</span>
+                              )}
+                            </div>
                           </div>
                         </div>
-                        <button onClick={() => removeItem(item.id)} className="text-gray-300 hover:text-red-400 transition-colors flex-shrink-0">
-                          <Trash2 size={15} />
-                        </button>
+                      </div>
+                      {/* Bundle pieces breakdown */}
+                      {item.bundleItems && item.bundleItems.length > 0 && (
+                        <div className="mt-4 ml-28 md:ml-36 space-y-2 border-t border-gray-50 pt-4">
+                          <p className="text-[10px] tracking-widest uppercase text-gray-400 mb-2">Pieces included:</p>
+                          {item.bundleItems.map((piece, idx) => (
+                            <div key={idx} className="flex items-center gap-3 text-xs text-gray-500">
+                              <span className="w-5 h-5 bg-gray-100 flex items-center justify-center text-[10px] flex-shrink-0 font-medium">{idx + 1}</span>
+                              <span className="tracking-wider">{piece.color}</span>
+                              {piece.size && (
+                                <>
+                                  <span className="text-gray-300">·</span>
+                                  <span className="tracking-wider">Size {piece.size}</span>
+                                </>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    /* Regular Item */
+                    <div className="flex gap-6">
+                      <Link href={`/product/${item.slug}`} className="relative w-24 h-32 md:w-28 md:h-36 bg-gray-50 flex-shrink-0 overflow-hidden">
+                        <Image src={item.image || "https://placehold.co/200x267/f5f5f5/000?text=SW"} alt={item.name} fill className="object-cover" />
+                      </Link>
+                      <div className="flex-1 flex flex-col justify-between">
+                        <div>
+                          <div className="flex items-start justify-between gap-4">
+                            <div>
+                              <h3 className="text-sm font-medium tracking-wide uppercase">{item.name}</h3>
+                              <div className="flex gap-4 mt-2">
+                                {item.size && <span className="text-xs text-gray-400 tracking-wider">SIZE: {item.size}</span>}
+                                {item.color && <span className="text-xs text-gray-400 tracking-wider">COLOR: {item.color}</span>}
+                              </div>
+                            </div>
+                            <button onClick={() => removeItem(item.id)} className="text-gray-300 hover:text-red-400 transition-colors flex-shrink-0">
+                              <Trash2 size={15} />
+                            </button>
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between mt-4">
+                          <div className="flex items-center border border-gray-200">
+                            <button onClick={() => updateQuantity(item.id, item.quantity - 1)} className="w-9 h-9 flex items-center justify-center hover:bg-gray-50 transition-colors text-sm">−</button>
+                            <span className="w-9 h-9 flex items-center justify-center text-xs">{item.quantity}</span>
+                            <button onClick={() => updateQuantity(item.id, item.quantity + 1)} className="w-9 h-9 flex items-center justify-center hover:bg-gray-50 transition-colors text-sm">+</button>
+                          </div>
+                          <p className="text-sm font-medium">{formatPrice(item.price * item.quantity)}</p>
+                        </div>
                       </div>
                     </div>
-                    <div className="flex items-center justify-between mt-4">
-                      <div className="flex items-center border border-gray-200">
-                        <button onClick={() => updateQuantity(item.id, item.quantity - 1)} className="w-9 h-9 flex items-center justify-center hover:bg-gray-50 transition-colors text-sm">−</button>
-                        <span className="w-9 h-9 flex items-center justify-center text-xs">{item.quantity}</span>
-                        <button onClick={() => updateQuantity(item.id, item.quantity + 1)} className="w-9 h-9 flex items-center justify-center hover:bg-gray-50 transition-colors text-sm">+</button>
-                      </div>
-                      <p className="text-sm font-medium">{formatPrice(item.price * item.quantity)}</p>
-                    </div>
-                  </div>
+                  )}
                 </div>
               ))}
             </div>
