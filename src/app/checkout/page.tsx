@@ -78,8 +78,19 @@ export default function CheckoutPage() {
         customer: { name: data.name.trim(), phone: data.phone.trim(), email: data.email?.trim() || null, address: data.address.trim(), city: data.city.trim() },
         notes: data.notes?.trim() || null,
         couponCode: coupon?.code || null,
-        items: items.map((i) => ({ productId: i.productId, quantity: i.quantity, size: i.size || null, color: i.color || null })),
-      });
+        items: items.map((i) => {
+          if (i.isBundle) {
+            return {
+              productId: i.productId,
+              quantity: 1,
+              isBundle: true,
+              bundlePrice: i.price,
+              bundleQuantity: i.bundleQuantity,
+              bundleItems: i.bundleItems || [],
+            };
+          }
+          return { productId: i.productId, quantity: i.quantity, size: i.size || null, color: i.color || null };
+        }),
       setOrderNumber(res.data.orderNumber);
       // Track Purchase
       fbPurchase({
