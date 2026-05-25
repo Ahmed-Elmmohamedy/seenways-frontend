@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { Check, ArrowRight, ShieldCheck, Tag, X } from "lucide-react";
+import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { useCartStore } from "@/lib/store";
@@ -93,7 +94,6 @@ export default function CheckoutPage() {
         }),
       });
       setOrderNumber(res.data.orderNumber);
-      // Track Purchase
       fbPurchase({
         orderNumber: res.data.orderNumber,
         total: finalTotal,
@@ -109,17 +109,27 @@ export default function CheckoutPage() {
   if (done) return (
     <>
       <Navbar />
-      <main className="pt-20 min-h-screen flex flex-col items-center justify-center gap-8 px-6">
-        <div className="w-20 h-20 rounded-full bg-black flex items-center justify-center"><Check size={36} className="text-white" /></div>
+      <main className="pt-20 min-h-screen flex flex-col items-center justify-center gap-8 px-6" dir="ltr">
+        <div className="w-20 h-20 rounded-full bg-black flex items-center justify-center">
+          <Check size={36} className="text-white" />
+        </div>
         <div className="text-center max-w-md">
           <h1 className="text-5xl font-display mb-4">ORDER PLACED!</h1>
           <p className="text-gray-400 text-sm mb-2">Order Number</p>
-          <p className="text-2xl font-display tracking-widest mb-6">{orderNumber}</p>
+          <p className="text-2xl font-display tracking-widest mb-3">{orderNumber}</p>
+          <p className="text-[10px] text-gray-400 tracking-widest uppercase mb-6">Save this number to track your order</p>
           <p className="text-gray-400 text-sm leading-relaxed">We'll contact you shortly to confirm. Thank you for shopping with SEENWAYS.</p>
         </div>
-        <button onClick={() => router.push("/")} className="bg-black text-white px-10 py-4 text-xs tracking-widest uppercase hover:bg-gray-900 transition-colors">
-          BACK TO HOME
-        </button>
+        <div className="flex flex-col sm:flex-row gap-3 w-full max-w-sm">
+          <Link href={`/track-order?order=${orderNumber}`}
+            className="flex-1 flex items-center justify-center gap-2 bg-black text-white py-4 text-xs tracking-widest uppercase hover:bg-gray-900 transition-colors">
+            TRACK ORDER <ArrowRight size={14} />
+          </Link>
+          <button onClick={() => router.push("/")}
+            className="flex-1 border border-gray-200 py-4 text-xs tracking-widest uppercase hover:border-black transition-colors">
+            BACK TO HOME
+          </button>
+        </div>
       </main>
       <Footer />
     </>
@@ -202,13 +212,21 @@ export default function CheckoutPage() {
                   <div key={item.id} className="flex gap-4 py-4">
                     <div className="relative w-14 h-18 bg-gray-50 flex-shrink-0 overflow-hidden">
                       <Image src={item.image || "https://placehold.co/56x72/f5f5f5/000?text=SW"} alt={item.name} fill className="object-cover" />
-                      <span className="absolute -top-1 -right-1 bg-black text-white text-[9px] w-4 h-4 flex items-center justify-center rounded-full">{item.quantity}</span>
+                      {item.isBundle ? (
+                        <span className="absolute -top-1 -right-1 bg-black text-white text-[9px] w-4 h-4 flex items-center justify-center rounded-full">{item.bundleQuantity}</span>
+                      ) : (
+                        <span className="absolute -top-1 -right-1 bg-black text-white text-[9px] w-4 h-4 flex items-center justify-center rounded-full">{item.quantity}</span>
+                      )}
                     </div>
                     <div className="flex-1">
                       <p className="text-xs font-medium uppercase">{item.name}</p>
-                      <p className="text-[10px] text-gray-400 mt-0.5">{[item.size && `Size: ${item.size}`, item.color && `Color: ${item.color}`].filter(Boolean).join(" · ")}</p>
+                      {item.isBundle ? (
+                        <p className="text-[10px] text-gray-400 mt-0.5">Bundle x{item.bundleQuantity}</p>
+                      ) : (
+                        <p className="text-[10px] text-gray-400 mt-0.5">{[item.size && `Size: ${item.size}`, item.color && `Color: ${item.color}`].filter(Boolean).join(" · ")}</p>
+                      )}
                     </div>
-                    <p className="text-xs font-medium">{formatPrice(item.price * item.quantity)}</p>
+                    <p className="text-xs font-medium">{formatPrice(item.price)}</p>
                   </div>
                 ))}
               </div>
