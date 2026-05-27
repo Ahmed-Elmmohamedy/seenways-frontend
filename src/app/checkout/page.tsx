@@ -174,6 +174,7 @@ export default function CheckoutPage() {
                     onChange={(e) => {
                       const gov = governorates.find(g => g.name === e.target.value);
                       setSelectedGov(gov || null);
+                      register("city").onChange(e);
                     }}
                     className="w-full border border-gray-200 px-4 py-3.5 text-sm focus:outline-none focus:border-black transition-colors">
                     <option value="">اختر المحافظة</option>
