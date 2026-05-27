@@ -10,7 +10,9 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getStats().then((r) => { setStats(r.data); setLoading(false); }).catch(() => setLoading(false));
+    getStats()
+      .then((r) => { setStats(r.data); setLoading(false); })
+      .catch((err) => { console.error("Stats error:", err); setLoading(false); });
   }, []);
 
   const orderGrowth = stats ? stats.lastMonthOrders > 0
