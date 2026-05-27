@@ -2,7 +2,7 @@ import axios from "axios";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://seenways-production.up.railway.app/api";
 
-export const api = axios.create({ baseURL: API_URL, timeout: 10000 });
+export const api = axios.create({ baseURL: API_URL, timeout: 30000 });
 
 api.interceptors.request.use((config) => {
   if (typeof window !== "undefined") {
