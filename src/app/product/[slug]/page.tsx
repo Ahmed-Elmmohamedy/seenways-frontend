@@ -5,7 +5,6 @@ import { useParams, useRouter } from "next/navigation";
 import { Heart, ShoppingBag, ArrowLeft, Check, X, Bell } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import { getProduct } from "@/lib/api";
 import { useCartStore, useWishlistStore } from "@/lib/store";
 import { formatPrice } from "@/lib/utils";
 import { viewContent, addToCart as fbAddToCart } from "@/lib/fbpixel";
