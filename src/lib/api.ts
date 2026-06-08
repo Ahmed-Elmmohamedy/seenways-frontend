@@ -73,3 +73,6 @@ export const getGovernorates = () => api.get("/governorates");
 export const getAdminGovernorates = () => api.get("/governorates/admin/all");
 export const updateGovernorate = (id: string, data: object) => api.put(`/governorates/${id}`, data);
 export const deleteGovernorate = (id: string) => api.delete(`/governorates/${id}`);
+
+// Notifications
+export const notifyStockAvailability = (data: object) => api.post("/notifications", data);
