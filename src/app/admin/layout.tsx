@@ -3,20 +3,21 @@ import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { LayoutDashboard, Package, ShoppingCart, Tag, LogOut, Menu, X, Settings, ChevronRight, Ticket, ShieldAlert, MapPin } from "lucide-react";
+import { LayoutDashboard, Package, ShoppingCart, Tag, LogOut, Menu, X, Settings, ChevronRight, Ticket, ShieldAlert, MapPin, Bell } from "lucide-react";
 import { useAuthStore } from "@/lib/store";
 
 const LOGO_WHITE = "https://qxkevpcrzpywtalzctsz.supabase.co/storage/v1/object/public/seenways-images/logo-white-transparent.png";
 
 const navItems = [
-  { href: "/admin", icon: LayoutDashboard, label: "Dashboard" },
-  { href: "/admin/products", icon: Package, label: "Products" },
-  { href: "/admin/orders", icon: ShoppingCart, label: "Orders" },
-  { href: "/admin/categories", icon: Tag, label: "Categories" },
-  { href: "/admin/coupons", icon: Ticket, label: "Coupons" },
-  { href: "/admin/blacklist", icon: ShieldAlert, label: "Blacklist" },
-{ href: "/admin/governorates", icon: MapPin, label: "Shipping" },
-{ href: "/admin/settings", icon: Settings, label: "Settings" },
+  { href: "/admin",               icon: LayoutDashboard, label: "Dashboard" },
+  { href: "/admin/products",      icon: Package,         label: "Products" },
+  { href: "/admin/orders",        icon: ShoppingCart,    label: "Orders" },
+  { href: "/admin/categories",    icon: Tag,             label: "Categories" },
+  { href: "/admin/coupons",       icon: Ticket,          label: "Coupons" },
+  { href: "/admin/notifications", icon: Bell,            label: "Notifications" },
+  { href: "/admin/blacklist",     icon: ShieldAlert,     label: "Blacklist" },
+  { href: "/admin/governorates",  icon: MapPin,          label: "Shipping" },
+  { href: "/admin/settings",      icon: Settings,        label: "Settings" },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -62,7 +63,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <p className="text-xs text-white/50 font-medium truncate">{admin?.name}</p>
             <p className="text-[10px] text-white/20 tracking-wider mt-0.5 truncate">{admin?.email}</p>
           </div>
-          <button onClick={handleLogout} className="flex items-center gap-3 px-4 py-2.5 text-white/30 hover:text-white text-xs tracking-widest uppercase w-full transition-colors rounded-sm hover:bg-white/5">
+          <button onClick={handleLogout}
+            className="flex items-center gap-3 px-4 py-2.5 text-white/30 hover:text-white text-xs tracking-widest uppercase w-full transition-colors rounded-sm hover:bg-white/5">
             <LogOut size={14} /> Logout
           </button>
         </div>
@@ -80,7 +82,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               {navItems.map((item) => <NavLink key={item.href} item={item} onClick={() => setSidebarOpen(false)} />)}
             </nav>
             <div className="p-3 border-t border-white/10">
-              <button onClick={handleLogout} className="flex items-center gap-3 px-4 py-2.5 text-white/30 text-xs tracking-widest uppercase w-full">
+              <button onClick={handleLogout}
+                className="flex items-center gap-3 px-4 py-2.5 text-white/30 text-xs tracking-widest uppercase w-full">
                 <LogOut size={14} /> Logout
               </button>
             </div>
@@ -98,7 +101,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               {pathname.split("/").filter(Boolean).map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(" › ")}
             </p>
           </div>
-          <Link href="/" target="_blank" className="text-[10px] tracking-widest text-gray-400 hover:text-black transition-colors uppercase border-b border-transparent hover:border-gray-400 pb-0.5">
+          <Link href="/" target="_blank"
+            className="text-[10px] tracking-widest text-gray-400 hover:text-black transition-colors uppercase border-b border-transparent hover:border-gray-400 pb-0.5">
             View Store ↗
           </Link>
         </header>
