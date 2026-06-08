@@ -1,4 +1,5 @@
 "use client";
+import { getProduct, notifyStockAvailability } from "@/lib/api";
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Heart, ShoppingBag, ArrowLeft, Check, X, Bell } from "lucide-react";
@@ -79,26 +80,23 @@ export default function ProductPage() {
   const toggleWishlist = () => { if (product) toggleWishlistItem(product.id); };
 
   const handleNotifyMe = async () => {
-    if (!product) return;
-    const phoneClean = notifyPhone.replace(/\s/g, "");
-    if (!/^(010|011|012|015)\d{8}$/.test(phoneClean)) {
-      toast.error("رقم التليفون غير صحيح — يجب أن يبدأ بـ 010 أو 011 أو 012 أو 015");
-      return;
-    }
-    setNotifyLoading(true);
-    try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "";
-      const res = await fetch(`${apiUrl}/api/notifications`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productId: product.id, phone: phoneClean }),
-      });
-      const data = await res.json();
-      if (res.ok) { setNotifySuccess(true); setShowNotifyForm(false); }
-      else toast.error(data.error || "حدث خطأ، حاول مرة أخرى");
-    } catch { toast.error("حدث خطأ، حاول مرة أخرى"); }
-    finally { setNotifyLoading(false); }
-  };
+  if (!product) return;
+  const phoneClean = notifyPhone.replace(/\s/g, "");
+  if (!/^(010|011|012|015)\d{8}$/.test(phoneClean)) {
+    toast.error("رقم التليفون غير صحيح — يجب أن يبدأ بـ 010 أو 011 أو 012 أو 015");
+    return;
+  }
+  setNotifyLoading(true);
+  try {
+    await notifyStockAvailability({ productId: product.id, phone: phoneClean });
+    setNotifySuccess(true);
+    setShowNotifyForm(false);
+  } catch (err: any) {
+    toast.error(err.response?.data?.error || "حدث خطأ، حاول مرة أخرى");
+  } finally {
+    setNotifyLoading(false);
+  }
+};
 
   const openBundleModal = (bundle: Bundle) => {
     setBundleModal(bundle);
