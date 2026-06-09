@@ -60,7 +60,7 @@ export default function HomePage() {
 
         {/* Announcement */}
         <div className="bg-black text-white text-center py-4">
-          <p className="text-xs tracking-[0.4em] uppercase px-4">FREE SHIPPING ON ORDERS OVER 1000 EGP &nbsp;·&nbsp; NEW COLLECTION 2026</p>
+          <p className="text-xs tracking-[0.4em] uppercase px-4">FREE SHIPPING ON ORDERS OVER 2000 EGP &nbsp;·&nbsp; NEW COLLECTION 2026</p>
         </div>
 
         {/* Categories */}
