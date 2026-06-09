@@ -58,9 +58,9 @@ export default function ProductPage() {
   const availableSizes = selectedColor?.sizes?.filter(s => s.stock > 0) || [];
   const isInWishlist   = product ? isInWishlistFn(product.id) : false;
   const hasVariants    = (product?.colorVariants?.length || 0) > 0;
-  const isOutOfStock   = hasVariants
-    ? (selectedColor ? availableSizes.length === 0 : false)
-    : ((product?.stock || 0) <= 0);
+  const isOutOfStock = hasVariants
+  ? (selectedSize ? selectedSize.stock === 0 : availableSizes.length === 0)
+  : ((product?.stock || 0) <= 0);
 
   const handleAddToCart = () => {
     if (!product) return;
@@ -228,13 +228,14 @@ export default function ProductPage() {
   <div className="flex gap-2 flex-wrap">
     {selectedColor!.sizes.map(s => (
       <button key={s.id}
-        onClick={() => s.stock > 0 ? setSelectedSize(s) : null}
-        disabled={s.stock === 0}
+        onClick={() => setSelectedSize(s)}
         className={`w-14 h-14 text-xs tracking-widest uppercase border-2 transition-all
           ${selectedSize?.id === s.id
-            ? "border-black bg-black text-white"
+            ? s.stock === 0
+              ? "border-red-300 bg-red-50 text-red-400"
+              : "border-black bg-black text-white"
             : s.stock === 0
-            ? "border-gray-100 text-gray-300 cursor-not-allowed line-through"
+            ? "border-gray-100 text-gray-300 hover:border-gray-300 line-through"
             : "border-gray-200 hover:border-gray-400"}`}>
         {s.size}
       </button>
@@ -278,40 +279,44 @@ export default function ProductPage() {
               {/* Actions */}
               <div className="flex gap-3 pt-2">
                 {isOutOfStock ? (
-                  <div className="flex-1 space-y-3">
-                    <div className="w-full bg-gray-100 text-gray-400 py-4 text-xs tracking-widest uppercase text-center">
-                      OUT OF STOCK
-                    </div>
-                    {notifySuccess ? (
-                      <div className="w-full border border-green-200 bg-green-50 py-4 text-xs tracking-widest uppercase text-green-600 text-center">
-                        ✅ هنبلغك فور توفر المنتج
-                      </div>
-                    ) : showNotifyForm ? (
-                      <div className="flex gap-2">
-                        <input type="tel" value={notifyPhone}
-                          onChange={e => setNotifyPhone(e.target.value)}
-                          onKeyDown={e => e.key === "Enter" && handleNotifyMe()}
-                          placeholder="01xxxxxxxxx" dir="ltr"
-                          className="flex-1 border border-gray-200 px-4 py-3 text-sm focus:outline-none focus:border-black transition-colors" />
-                        <button onClick={handleNotifyMe} disabled={notifyLoading}
-                          className="bg-black text-white px-5 text-xs tracking-widest uppercase hover:bg-gray-900 transition-colors disabled:opacity-50 whitespace-nowrap">
-                          {notifyLoading ? "..." : "تأكيد"}
-                        </button>
-                      </div>
-                    ) : (
-                      <button onClick={() => setShowNotifyForm(true)}
-                        className="w-full border-2 border-black py-4 text-xs tracking-widest uppercase hover:bg-black hover:text-white transition-all flex items-center justify-center gap-2">
-                        <Bell size={13} /> أبلغني عند التوفر
-                      </button>
-                    )}
-                  </div>
-                ) : (
-                  <button onClick={handleAddToCart}
-                    disabled={selectedColor ? (!selectedSize || availableSizes.length === 0) : false}
-                    className="flex-1 bg-black text-white py-4 flex items-center justify-center gap-3 text-xs tracking-widest uppercase hover:bg-gray-900 transition-colors disabled:opacity-40">
-                    {added ? <><Check size={14} /> Added to Bag</> : <><ShoppingBag size={14} /> Add to Bag</>}
-                  </button>
-                )}
+  <div className="flex-1 space-y-3">
+    <div className="w-full bg-gray-100 text-gray-400 py-4 text-xs tracking-widest uppercase text-center">
+      OUT OF STOCK
+    </div>
+    {!selectedSize ? (
+      <p className="text-xs text-center text-gray-400 tracking-widest py-2">
+        ← اختر المقاس أولاً للاشتراك في الإشعار
+      </p>
+    ) : notifySuccess ? (
+      <div className="w-full border border-green-200 bg-green-50 py-4 text-xs tracking-widest uppercase text-green-600 text-center">
+        ✅ هنبلغك فور توفر المنتج
+      </div>
+    ) : showNotifyForm ? (
+      <div className="flex gap-2">
+        <input type="tel" value={notifyPhone}
+          onChange={e => setNotifyPhone(e.target.value)}
+          onKeyDown={e => e.key === "Enter" && handleNotifyMe()}
+          placeholder="01xxxxxxxxx" dir="ltr"
+          className="flex-1 border border-gray-200 px-4 py-3 text-sm focus:outline-none focus:border-black transition-colors" />
+        <button onClick={handleNotifyMe} disabled={notifyLoading}
+          className="bg-black text-white px-5 text-xs tracking-widest uppercase hover:bg-gray-900 transition-colors disabled:opacity-50 whitespace-nowrap">
+          {notifyLoading ? "..." : "تأكيد"}
+        </button>
+      </div>
+    ) : (
+      <button onClick={() => setShowNotifyForm(true)}
+        className="w-full border-2 border-black py-4 text-xs tracking-widest uppercase hover:bg-black hover:text-white transition-all flex items-center justify-center gap-2">
+        <Bell size={13} /> أبلغني عند التوفر
+      </button>
+    )}
+  </div>
+) : (
+  <button onClick={handleAddToCart}
+    disabled={selectedColor ? (!selectedSize || availableSizes.length === 0) : false}
+    className="flex-1 bg-black text-white py-4 flex items-center justify-center gap-3 text-xs tracking-widest uppercase hover:bg-gray-900 transition-colors disabled:opacity-40">
+    {added ? <><Check size={14} /> Added to Bag</> : <><ShoppingBag size={14} /> Add to Bag</>}
+  </button>
+)}
                 <button onClick={toggleWishlist}
                   className={`w-14 border-2 flex items-center justify-center transition-all ${isInWishlist ? "border-black bg-black text-white" : "border-gray-200 hover:border-black"}`}>
                   <Heart size={16} fill={isInWishlist ? "currentColor" : "none"} />
