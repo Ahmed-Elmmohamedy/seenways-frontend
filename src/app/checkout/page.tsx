@@ -40,7 +40,7 @@ export default function CheckoutPage() {
 
   const subtotal = total();
   const discountAmount = coupon?.discount || 0;
-  const shippingFee = selectedGov?.shippingFee || 0;
+  const shippingFee = subtotal >= 2000 ? 0 : (selectedGov?.shippingFee || 0);
   const finalTotal = subtotal - discountAmount + shippingFee;
 
   useEffect(() => {
