@@ -87,7 +87,12 @@ export default function ProductPage() {
   }
   setNotifyLoading(true);
   try {
-    await notifyStockAvailability({ productId: product.id, phone: phoneClean });
+    await notifyStockAvailability({
+  productId: product.id,
+  phone: phoneClean,
+  color: selectedColor?.name || null,
+  size: selectedSize?.size || null,
+});
     setNotifySuccess(true);
     setShowNotifyForm(false);
   } catch (err: any) {
