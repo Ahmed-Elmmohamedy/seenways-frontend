@@ -224,18 +224,25 @@ export default function ProductPage() {
                       </button>
                     )}
                   </div>
-                  {availableSizes.length > 0 ? (
-                    <div className="flex gap-2 flex-wrap">
-                      {availableSizes.map(s => (
-                        <button key={s.id} onClick={() => setSelectedSize(s)}
-                          className={`w-14 h-14 text-xs tracking-widest uppercase border-2 transition-all ${selectedSize?.id === s.id ? "border-black bg-black text-white" : "border-gray-200 hover:border-gray-400"}`}>
-                          {s.size}
-                        </button>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-xs text-red-400 tracking-widest uppercase">Out of Stock</p>
-                  )}
+                  {(selectedColor?.sizes?.length || 0) > 0 ? (
+  <div className="flex gap-2 flex-wrap">
+    {selectedColor!.sizes.map(s => (
+      <button key={s.id}
+        onClick={() => s.stock > 0 ? setSelectedSize(s) : null}
+        disabled={s.stock === 0}
+        className={`w-14 h-14 text-xs tracking-widest uppercase border-2 transition-all
+          ${selectedSize?.id === s.id
+            ? "border-black bg-black text-white"
+            : s.stock === 0
+            ? "border-gray-100 text-gray-300 cursor-not-allowed line-through"
+            : "border-gray-200 hover:border-gray-400"}`}>
+        {s.size}
+      </button>
+    ))}
+  </div>
+) : (
+  <p className="text-xs text-red-400 tracking-widest uppercase">Out of Stock</p>
+)}
                 </div>
               )}
 
