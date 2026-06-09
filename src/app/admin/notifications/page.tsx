@@ -7,6 +7,8 @@ import toast from "react-hot-toast";
 interface Notification {
   id: string;
   phone: string;
+  color?: string;
+  size?: string;
   notified: boolean;
   createdAt: string;
   product: { id: string; name: string };
@@ -27,6 +29,7 @@ export default function NotificationsPage() {
       const res = await fetch(`${API}/notifications${query}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
+      if (!res.ok) throw new Error("فشل التحميل");
       const data = await res.json();
       setNotifications(Array.isArray(data) ? data : []);
     } catch {
@@ -40,10 +43,11 @@ export default function NotificationsPage() {
 
   const markNotified = async (id: string) => {
     try {
-      await fetch(`${API}/notifications/${id}/notified`, {
+      const res = await fetch(`${API}/notifications/${id}/notified`, {
         method: "PATCH",
         headers: { Authorization: `Bearer ${token}` }
       });
+      if (!res.ok) throw new Error();
       toast.success("تم التحديد كـ مُبلَّغ");
       load();
     } catch {
@@ -54,28 +58,31 @@ export default function NotificationsPage() {
   const deleteNotification = async (id: string) => {
     if (!confirm("حذف هذا الإشعار؟")) return;
     try {
-      await fetch(`${API}/notifications/${id}`, {
+      const res = await fetch(`${API}/notifications/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` }
       });
+      if (!res.ok) throw new Error();
       toast.success("تم الحذف");
-      load();
+      setNotifications(prev => prev.filter(n => n.id !== id));
     } catch {
-      toast.error("حدث خطأ");
+      toast.error("فشل الحذف — تأكد من الاتصال");
     }
   };
 
-  const openWhatsApp = (phone: string, productName: string) => {
-    const msg = encodeURIComponent(`مرحباً! المنتج "${productName}" أصبح متاحاً الآن على SEENWAYS 🎉\nتفضل بزيارة الموقع: https://seenways.com`);
+  const openWhatsApp = (phone: string, productName: string, color?: string, size?: string) => {
+    const details = [color && `اللون: ${color}`, size && `المقاس: ${size}`].filter(Boolean).join(" — ");
+    const msg = encodeURIComponent(
+      `مرحباً! المنتج "${productName}"${details ? ` (${details})` : ""} أصبح متاحاً الآن على SEENWAYS 🎉\nتفضل بزيارة الموقع: https://seenways.com`
+    );
     window.open(`https://wa.me/2${phone}?text=${msg}`, "_blank");
   };
 
-  const pending   = notifications.filter(n => !n.notified).length;
-  const notified  = notifications.filter(n =>  n.notified).length;
+  const pending  = notifications.filter(n => !n.notified).length;
+  const notified = notifications.filter(n =>  n.notified).length;
 
   return (
     <div dir="rtl">
-      {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-3xl font-display tracking-widest">NOTIFICATIONS</h1>
@@ -93,7 +100,6 @@ export default function NotificationsPage() {
         </div>
       </div>
 
-      {/* Filter */}
       <div className="flex gap-2 mb-5">
         {[
           { id: "pending",  label: "في الانتظار" },
@@ -107,7 +113,6 @@ export default function NotificationsPage() {
         ))}
       </div>
 
-      {/* Table */}
       <div className="bg-white border border-gray-100 overflow-hidden">
         {loading ? (
           <div className="p-6 space-y-3">
@@ -123,6 +128,7 @@ export default function NotificationsPage() {
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-5 py-3.5 text-right text-[10px] tracking-widest uppercase text-gray-400">المنتج</th>
+                <th className="px-5 py-3.5 text-right text-[10px] tracking-widest uppercase text-gray-400 hidden md:table-cell">اللون / المقاس</th>
                 <th className="px-5 py-3.5 text-right text-[10px] tracking-widest uppercase text-gray-400">رقم التليفون</th>
                 <th className="px-5 py-3.5 text-right text-[10px] tracking-widest uppercase text-gray-400 hidden md:table-cell">التاريخ</th>
                 <th className="px-5 py-3.5 text-right text-[10px] tracking-widest uppercase text-gray-400">الحالة</th>
@@ -134,6 +140,13 @@ export default function NotificationsPage() {
                 <tr key={n.id} className="hover:bg-gray-50 transition-colors">
                   <td className="px-5 py-4">
                     <p className="text-xs font-medium">{n.product?.name}</p>
+                  </td>
+                  <td className="px-5 py-4 hidden md:table-cell">
+                    <div className="flex gap-2 flex-wrap">
+                      {n.color && <span className="text-[10px] bg-gray-100 px-2 py-0.5">{n.color}</span>}
+                      {n.size  && <span className="text-[10px] bg-gray-100 px-2 py-0.5">{n.size}</span>}
+                      {!n.color && !n.size && <span className="text-[10px] text-gray-300">—</span>}
+                    </div>
                   </td>
                   <td className="px-5 py-4">
                     <p className="text-xs font-mono tracking-wider" dir="ltr">{n.phone}</p>
@@ -150,25 +163,19 @@ export default function NotificationsPage() {
                   </td>
                   <td className="px-5 py-4">
                     <div className="flex items-center gap-2 justify-end">
-                      {/* واتساب */}
-                      <button
-                        onClick={() => openWhatsApp(n.phone, n.product?.name)}
+                      <button onClick={() => openWhatsApp(n.phone, n.product?.name, n.color, n.size)}
                         title="إرسال واتساب"
                         className="text-green-500 hover:text-green-700 transition-colors">
                         <MessageCircle size={16} />
                       </button>
-                      {/* تحديد كـ مُبلَّغ */}
                       {!n.notified && (
-                        <button
-                          onClick={() => markNotified(n.id)}
+                        <button onClick={() => markNotified(n.id)}
                           title="تحديد كـ مُبلَّغ"
                           className="text-gray-400 hover:text-black transition-colors">
                           <Check size={16} />
                         </button>
                       )}
-                      {/* حذف */}
-                      <button
-                        onClick={() => deleteNotification(n.id)}
+                      <button onClick={() => deleteNotification(n.id)}
                         title="حذف"
                         className="text-gray-300 hover:text-red-400 transition-colors">
                         <Trash2 size={15} />
