@@ -150,9 +150,25 @@ export default function CartPage() {
                     <span>{formatPrice(total())}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-500 tracking-wider">Shipping</span>
-                    <span className="text-gray-400 text-xs tracking-wider">Calculated at checkout</span>
-                  </div>
+  <span className="text-gray-500 tracking-wider">Shipping</span>
+  <span className={total() >= 2000 ? "text-green-600 text-xs tracking-wider" : "text-gray-400 text-xs tracking-wider"}>
+    {total() >= 2000 ? "FREE ✓" : "Calculated at checkout"}
+  </span>
+</div>
+{total() < 2000 && (
+  <div className="mt-3">
+    <div className="flex justify-between text-[10px] text-gray-400 tracking-wider mb-1.5">
+      <span>أضف {formatPrice(2000 - total())} للشحن المجاني</span>
+      <span>{Math.round((total() / 2000) * 100)}%</span>
+    </div>
+    <div className="w-full bg-gray-200 h-1">
+      <div
+        className="bg-black h-1 transition-all duration-300"
+        style={{ width: `${Math.min((total() / 2000) * 100, 100)}%` }}
+      />
+    </div>
+  </div>
+)}
                 </div>
                 <div className="border-t border-gray-200 pt-6 mb-8">
                   <div className="flex justify-between">
