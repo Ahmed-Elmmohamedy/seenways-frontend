@@ -100,7 +100,7 @@ export default function AdminSettingsPage() {
             ["Country", "Egypt"],
             ["Currency", "EGP (ج.م)"],
             ["WhatsApp Orders", "Enabled"],
-            ["Free Shipping Over", "500 ج.م"],
+            ["Free Shipping Over", "2000 ج.م"],
           ].map(([label, value]) => (
             <div key={label} className="flex justify-between py-3 border-b border-gray-50">
               <span className="text-xs text-gray-400 tracking-wider">{label}</span>
