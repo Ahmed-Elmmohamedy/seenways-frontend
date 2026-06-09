@@ -35,7 +35,7 @@ export default function ShippingPage() {
                 <Truck size={24} className="mb-6 text-gray-400" />
                 <h3 className="text-xl font-display tracking-widest mb-3">FREE SHIPPING</h3>
                 <p className="text-gray-400 text-sm leading-relaxed">
-                  On all orders over 1,000 EGP. Orders below 1,000 EGP ship for a flat rate of 70 EGP.
+                  On all orders over 2,000 EGP. Orders below 2,000 EGP ship for a flat rate of 70 EGP.
                 </p>
               </div>
               <div className="border border-gray-100 p-8">
@@ -92,12 +92,12 @@ export default function ShippingPage() {
             <h2 className="text-4xl md:text-5xl font-display mb-12">HOW MUCH DOES IT COST?</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="bg-black text-white p-8">
-                <p className="text-xs tracking-widest uppercase text-white/40 mb-4">Orders over 1,000 EGP</p>
+                <p className="text-xs tracking-widest uppercase text-white/40 mb-4">Orders over 2,000 EGP</p>
                 <p className="text-5xl font-display mb-3">FREE</p>
-                <p className="text-white/50 text-xs leading-relaxed">No shipping fees on orders above 1,000 EGP, delivered anywhere in Egypt.</p>
+                <p className="text-white/50 text-xs leading-relaxed">No shipping fees on orders above 2,000 EGP, delivered anywhere in Egypt.</p>
               </div>
               <div className="bg-white border border-gray-200 p-8">
-                <p className="text-xs tracking-widest uppercase text-gray-400 mb-4">Orders below 1,000 EGP</p>
+                <p className="text-xs tracking-widest uppercase text-gray-400 mb-4">Orders below 2,000 EGP</p>
                 <p className="text-5xl font-display mb-3">VARIES</p>
                 <p className="text-gray-400 text-xs leading-relaxed">Shipping fee varies by governorate and is calculated automatically at checkout when you select your governorate.</p>
               </div>
